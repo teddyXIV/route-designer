@@ -6,9 +6,10 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({ text, containerStyles, textStyles, handleClick }) => {
+
   return (
     <button
-      className={`rounded-xl justify-center items-center bg-${containerStyles} px-2 py-1`}
+      className={`rounded-lg justify-center items-center bg-${containerStyles} px-2 py-1`}
       onClick={handleClick}>
       <p
         className={`text-lg text-${textStyles} `}>
