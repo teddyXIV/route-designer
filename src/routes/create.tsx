@@ -8,12 +8,21 @@ const Create = () => {
   const mapContainerRef: any = useRef()
 
   useEffect(() => {
-    mapboxgl.accessToken
+    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+    mapRef.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+    });
+
+    return () => {
+      mapRef.current.remove()
+    }
   }, [])
 
   return (
     <>
-      <div ref={mapContainerRef} />
+      <div
+        ref={mapContainerRef}
+        className="w-full h-screen" />
     </>
   )
 }
