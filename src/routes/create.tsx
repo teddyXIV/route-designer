@@ -22,7 +22,7 @@ const Create = () => {
     <>
       <div
         ref={mapContainerRef}
-        className="w-full h-screen" />
+        className="w-full h-[450px]" />
     </>
   )
 }

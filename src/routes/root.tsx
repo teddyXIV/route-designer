@@ -1,6 +1,6 @@
 import images from '../constants/logos.ts';
 import Button from '../utilities/Button';
-import { Outlet } from "react-router-dom"
+import { Outlet, Link } from "react-router-dom"
 
 const Root = () => {
 
@@ -8,8 +8,10 @@ const Root = () => {
     <>
       <div className="w-screen h-screen bg-black overflow-x-hidden overflow-y-auto">
         <div className="w-full h-14 bg-secondary mb-4 px-4 py-2 flex flex-row">
-          <img src={images.logo} alt="RouteDesigner logo" className="w-10 h-auto rounded-full" />
-          <h1 className="text-white text-2xl font-bold px-2 py-1">RouteDesigner</h1>
+          <Link to='/' className="flex flex-row">
+            <img src={images.logo} alt="RouteDesigner logo" className="w-10 h-auto rounded-full" />
+            <h1 className="text-white text-2xl font-bold px-2 py-1">RouteDesigner</h1>
+          </Link>
           <Button
             text="Create"
             containerStyles="bg-mainColor ml-auto"
