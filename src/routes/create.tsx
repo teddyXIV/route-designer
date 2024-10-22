@@ -20,9 +20,18 @@ const Create = () => {
 
   return (
     <>
-      <div
-        ref={mapContainerRef}
-        className="w-full h-[450px]" />
+      <div className="rounded-lg bg-secondary">
+        <p>01</p>
+        <p>02</p>
+        <p>03</p>
+      </div>
+      <div className="rounded-lg bg-black col-span-2">
+        <div
+          ref={mapContainerRef}
+          className="w-full h-[450px]"
+        />
+      </div>
+      <div className="rounded-lg bg-secondary">03</div>
     </>
   )
 }

@@ -4,12 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        mainColor: '#108342',
+        primary: '#108342',
         secondary: '#171c19',
-        tertiary: '#108342'
+        tertiary: '#77867F'
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
 }
 

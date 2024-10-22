@@ -1,6 +1,6 @@
 import image from "./logos.ts"
 
-interface SampleData {
+interface DummyMapData {
   image: string;
   title: string;
   distance: string;
@@ -9,7 +9,7 @@ interface SampleData {
   id: number;
 }
 
-const sampleData: SampleData[] = [
+const dummyMapData: DummyMapData[] = [
   {
     image: image.map,
     title: "Example 1",
@@ -52,4 +52,4 @@ const sampleData: SampleData[] = [
   }
 ];
 
-export default sampleData;
+export { dummyMapData };
