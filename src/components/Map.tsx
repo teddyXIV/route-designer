@@ -1,10 +1,11 @@
 import { useRef, useEffect, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxDirections from '@mapbox/mapbox-sdk/services/directions';
 
 const Map = () => {
-
+  const [center, setCenter] = useState<LngLatLike | undefined>([-122.65, 45.5])
+  const [zoom, setZoom] = useState<number>(10.12)
   const mapRef: any = useRef();
   const mapContainerRef: any = useRef()
   const [coordinates, setCoordinates] = useState<number[][]>([]);
@@ -14,11 +15,19 @@ const Map = () => {
 
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
-      center: [-122.65, 45.5],
-      zoom: 10.12
+      center: center,
+      zoom: zoom
     });
 
     const directionsClient = MapboxDirections({ accessToken: mapboxgl.accessToken });
+
+    mapRef.current.on('move', () => {
+      const mapCenter = mapRef.current.getCenter()
+      const mapZoom = mapRef.current.getZoom()
+
+      setCenter([mapCenter.lng, mapCenter.lat])
+      setZoom(mapZoom)
+    })
 
     mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
       const lngLat = e.lngLat.toArray();
