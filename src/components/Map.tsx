@@ -13,7 +13,6 @@ const Map: React.FC<MapProps> = ({ coords, changeCoords }) => {
   const [zoom, setZoom] = useState<number>(10.12);
   const mapRef: any = useRef();
   const mapContainerRef: any = useRef();
-  // const [coordinates, setCoordinates] = useState<number[][]>([]);
 
   useEffect(() => {
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -42,20 +41,14 @@ const Map: React.FC<MapProps> = ({ coords, changeCoords }) => {
       mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
         const lngLat = e.lngLat.toArray();
 
-        // Add marker at the clicked location
-        // new mapboxgl.Marker({ color: '#37FF8B' })
-        //   .setLngLat(lngLat)
-        //   .addTo(mapRef.current);
-
         changeCoords(lngLat);
 
-        // setCoordinates((prevCoordinates) => [...prevCoordinates, lngLat]);
       });
     }
   }, []);
 
   useEffect(() => {
-    console.log("useEffect coords: ", coords)
+
     const markers = coords.map(coord =>
       new mapboxgl.Marker({ color: '#37FF8B' })
         .setLngLat(coord as [number, number])
@@ -108,11 +101,15 @@ const Map: React.FC<MapProps> = ({ coords, changeCoords }) => {
         .catch((error: any) => {
           console.error('Error fetching directions:', error);
         });
+    } else if (mapRef.current.getSource('route')) {
+      mapRef.current.removeLayer('route');
+      mapRef.current.removeSource('route');
     }
 
     return () => {
       markers.forEach(marker => marker.remove());
     };
+
   }, [coords]);
 
   return (
