@@ -3,12 +3,16 @@ import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxDirections from '@mapbox/mapbox-sdk/services/directions';
 
-const Map = () => {
+interface MapProps {
+  coords: number[][];
+  changeCoords: (lngLat: number[]) => void;
+}
+
+const Map: React.FC<MapProps> = ({ coords, changeCoords }) => {
   const [center, setCenter] = useState<LngLatLike | undefined>([-122.65, 45.5]);
   const [zoom, setZoom] = useState<number>(10.12);
   const mapRef: any = useRef();
   const mapContainerRef: any = useRef();
-  const [coordinates, setCoordinates] = useState<number[][]>([]);
 
   useEffect(() => {
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -37,20 +41,23 @@ const Map = () => {
       mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
         const lngLat = e.lngLat.toArray();
 
-        // Add marker at the clicked location
-        new mapboxgl.Marker({ color: '#37FF8B' })
-          .setLngLat(lngLat)
-          .addTo(mapRef.current);
+        changeCoords(lngLat);
 
-        setCoordinates((prevCoordinates) => [...prevCoordinates, lngLat]);
       });
     }
   }, []);
 
   useEffect(() => {
-    if (coordinates.length > 1) {
+
+    const markers = coords.map(coord =>
+      new mapboxgl.Marker({ color: '#37FF8B' })
+        .setLngLat(coord as [number, number])
+        .addTo(mapRef.current)
+    );
+
+    if (coords.length > 1) {
       const directionsClient = MapboxDirections({ accessToken: mapboxgl.accessToken });
-      const points = coordinates.map((coord) => ({ coordinates: coord as [number, number] }));
+      const points = coords.map((coord) => ({ coordinates: coord as [number, number] }));
 
       directionsClient
         .getDirections({
@@ -94,8 +101,16 @@ const Map = () => {
         .catch((error: any) => {
           console.error('Error fetching directions:', error);
         });
+    } else if (mapRef.current.getSource('route')) {
+      mapRef.current.removeLayer('route');
+      mapRef.current.removeSource('route');
     }
-  }, [coordinates]);
+
+    return () => {
+      markers.forEach(marker => marker.remove());
+    };
+
+  }, [coords]);
 
   return (
     <div

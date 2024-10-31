@@ -2,38 +2,55 @@
 // import mapboxgl from 'mapbox-gl';
 
 // import 'mapbox-gl/dist/mapbox-gl.css';
+import { useState } from "react";
 import Map from "../components/Map";
 import Button from "../utilities/Button";
 
 const Create = () => {
+  const [coords, setCoords] = useState<number[][]>([])
 
-  const handleClick = () => {
+  const changeCoords = (lngLat: number[]) => {
+    setCoords((prevCoords) => [...prevCoords, lngLat]);
+  }
+
+  const removeLastCoord = () => {
     console.log("clicked")
+  }
+
+  const clearCoords = () => {
+    setCoords([]);
+    console.log("coords: ", coords)
+  }
+
+  const saveRoute = () => {
+    console.log("routesaved")
   }
 
   return (
     <>
       <div className="rounded-lg bg-black col-span-3">
-        <Map />
+        <Map
+          coords={coords}
+          changeCoords={changeCoords} />
       </div>
       <div className="flex flex-col rounded-lg bg-secondary text-white p-4">
         <Button
           text="Save route"
           containerStyles="bg-primary mb-2"
           textStyles="white"
-          handleClick={handleClick}
+          handleClick={saveRoute}
         />
         <Button
           text="Remove last point"
           containerStyles="bg-secondary border-2 border-primary mb-2"
           textStyles="white"
-          handleClick={handleClick}
+          handleClick={removeLastCoord}
         />
         <Button
           text="Clear all points"
           containerStyles="bg-secondary border-2 border-primary mb-2"
           textStyles="white"
-          handleClick={handleClick}
+          handleClick={clearCoords}
         />
       </div>
     </>
