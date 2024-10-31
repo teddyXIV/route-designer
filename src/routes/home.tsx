@@ -1,6 +1,6 @@
 import { dummyMapData } from "../constants/sampleData.js";
 import MapPost from '../components/MapPost.js';
-import Button from '../utilities/Button';
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const mapPosts = dummyMapData.map(post => {
@@ -28,11 +28,14 @@ const Home = () => {
         {mapPosts}
       </div>
       <div className="rounded-lg bg-secondary p-4 text-white">
-        <Button
-          text="Create"
-          containerStyles="bg-primary ml-auto"
-          textStyles="white"
-        />
+        <button className="rounded-lg justify-center items-center px-2 py-1 bg-primary ml-auto">
+          <Link to="/create">
+            <p
+              className="text-lg text-white">
+              Create
+            </p>
+          </Link>
+        </button>
       </div>
     </>
   )
