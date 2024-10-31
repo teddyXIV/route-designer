@@ -13,11 +13,6 @@ const Create = () => {
 
   return (
     <>
-      {/* <div className="rounded-lg bg-secondary text-white">
-        <p>01</p>
-        <p>02</p>
-        <p>03</p>
-      </div> */}
       <div className="rounded-lg bg-black col-span-3">
         <Map />
       </div>

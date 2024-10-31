@@ -19,8 +19,6 @@ const Map = () => {
       zoom: zoom,
     });
 
-    // const directionsClient = MapboxDirections({ accessToken: mapboxgl.accessToken });
-
     mapRef.current.on('move', () => {
       const mapCenter = mapRef.current.getCenter();
       const mapZoom = mapRef.current.getZoom();
@@ -40,7 +38,7 @@ const Map = () => {
         const lngLat = e.lngLat.toArray();
 
         // Add marker at the clicked location
-        new mapboxgl.Marker({ color: '#F17300' })
+        new mapboxgl.Marker({ color: '#37FF8B' })
           .setLngLat(lngLat)
           .addTo(mapRef.current);
 
