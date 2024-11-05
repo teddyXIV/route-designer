@@ -14,12 +14,11 @@ const Create = () => {
   }
 
   const removeLastCoord = () => {
-    console.log("clicked")
+    setCoords((prevCoords) => prevCoords.slice(0, -1))
   }
 
   const clearCoords = () => {
     setCoords([]);
-    console.log("coords: ", coords)
   }
 
   const saveRoute = () => {

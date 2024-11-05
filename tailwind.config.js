@@ -7,7 +7,8 @@ export default {
         primary: '#108342',
         secondary: '#171c19',
         tertiary: '#77867F',
-        fourth: '#37FF8B'
+        spring: '#37FF8B',
+        tomato: '#FF6542'
       }
     },
   },
