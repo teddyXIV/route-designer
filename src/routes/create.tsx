@@ -5,11 +5,12 @@
 import { useState } from "react";
 import Map from "../components/Map";
 import Button from "../utilities/Button";
+import SegmentDetails from "../components/SegmentDetails";
 
 const Create = () => {
   const [coords, setCoords] = useState<number[][]>([])
 
-  const changeCoords = (lngLat: number[]) => {
+  const addCoords = (lngLat: number[]) => {
     setCoords((prevCoords) => [...prevCoords, lngLat]);
   }
 
@@ -30,7 +31,7 @@ const Create = () => {
       <div className="rounded-lg bg-black col-span-3">
         <Map
           coords={coords}
-          changeCoords={changeCoords} />
+          addCoords={addCoords} />
       </div>
       <div className="flex flex-col rounded-lg bg-secondary text-white p-4">
         <Button
@@ -51,6 +52,7 @@ const Create = () => {
           textStyles="white"
           handleClick={clearCoords}
         />
+        <SegmentDetails coords={coords} />
       </div>
     </>
   )

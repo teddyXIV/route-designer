@@ -5,10 +5,10 @@ import MapboxDirections from '@mapbox/mapbox-sdk/services/directions';
 
 interface MapProps {
   coords: number[][];
-  changeCoords: (lngLat: number[]) => void;
+  addCoords: (lngLat: number[]) => void;
 }
 
-const Map: React.FC<MapProps> = ({ coords, changeCoords }) => {
+const Map: React.FC<MapProps> = ({ coords, addCoords }) => {
   const [center, setCenter] = useState<LngLatLike | undefined>([-122.65, 45.5]);
   const [zoom, setZoom] = useState<number>(10.12);
   const mapRef: any = useRef();
@@ -41,7 +41,7 @@ const Map: React.FC<MapProps> = ({ coords, changeCoords }) => {
       mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
         const lngLat = e.lngLat.toArray();
 
-        changeCoords(lngLat);
+        addCoords(lngLat);
 
       });
     }
