@@ -8,7 +8,8 @@ import Button from "../utilities/Button";
 import SegmentDetails from "../components/SegmentDetails";
 
 const Create = () => {
-  const [coords, setCoords] = useState<number[][]>([])
+  const [coords, setCoords] = useState<number[][]>([]);
+  const [distance, setDistance] = useState<number[]>([]);
 
   const addCoords = (lngLat: number[]) => {
     setCoords((prevCoords) => [...prevCoords, lngLat]);
@@ -22,6 +23,10 @@ const Create = () => {
     setCoords([]);
   }
 
+  const addDistance = (distance: number) => {
+    setDistance((prevDistance) => [...prevDistance, distance])
+  }
+
   const saveRoute = () => {
     console.log("routesaved")
   }
@@ -31,7 +36,8 @@ const Create = () => {
       <div className="rounded-lg bg-black col-span-3">
         <Map
           coords={coords}
-          addCoords={addCoords} />
+          addCoords={addCoords}
+          addDistance={addDistance} />
       </div>
       <div className="flex flex-col rounded-lg bg-secondary text-white p-4">
         <Button
@@ -52,7 +58,9 @@ const Create = () => {
           textStyles="white"
           handleClick={clearCoords}
         />
-        <SegmentDetails coords={coords} />
+        <SegmentDetails
+          coords={coords}
+          distance={distance} />
       </div>
     </>
   )

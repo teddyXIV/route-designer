@@ -6,11 +6,13 @@ import MapboxDirections from '@mapbox/mapbox-sdk/services/directions';
 interface MapProps {
   coords: number[][];
   addCoords: (lngLat: number[]) => void;
+  addDistance: (distance: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ coords, addCoords }) => {
+const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance }) => {
   const [center, setCenter] = useState<LngLatLike | undefined>([-122.65, 45.5]);
   const [zoom, setZoom] = useState<number>(10.12);
+  const [totalDist, setTotalDist] = useState<number>(0)
   const mapRef: any = useRef();
   const mapContainerRef: any = useRef();
 
@@ -69,6 +71,8 @@ const Map: React.FC<MapProps> = ({ coords, addCoords }) => {
         .then((response: any) => {
           console.log('response:', response);
           const route = response.body.routes[0].geometry;
+          const distance = response.body.routes[0].distance;
+          setTotalDist(distance);
 
           if (mapRef.current.getSource('route')) {
             mapRef.current.removeLayer('route');
@@ -97,6 +101,9 @@ const Map: React.FC<MapProps> = ({ coords, addCoords }) => {
               'line-width': 4,
             },
           });
+          console.log("distance", distance)
+          const segDist = (distance - totalDist)
+          addDistance(parseFloat(segDist.toFixed(3)));
         })
         .catch((error: any) => {
           console.error('Error fetching directions:', error);
