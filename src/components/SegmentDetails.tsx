@@ -1,22 +1,21 @@
 interface SegmentProps {
-  coords: number[][];
   distance: number[];
 }
 
-const SegmentDetails: React.FC<SegmentProps> = ({ coords, distance }) => {
-  console.log("SD coords", coords)
-  console.log("SD distance", distance)
-  const segmentDetails = coords.map((seg, index) => {
+const SegmentDetails: React.FC<SegmentProps> = ({ distance }) => {
+  // console.log("SD distance", distance)
+
+  const segmentDetails = distance.map((dist, index) => {
     return (
-      <div key={index}>
-        <p>{`${seg[0].toFixed(3)} - ${seg[1].toFixed(3)}`}</p>
-        {distance.length ? <p>{distance[index - 1]}</p> : null}
+      <div key={index} className="py-1">
+        <p className="underline text-sm">Segment {index + 1}</p>
+        <p className="text-lg">{dist}m</p>
       </div>
     )
   })
   return (
-    <div>
-      {coords.length > 1 ? segmentDetails : null}
+    <div className="p-2 divide-y divide-secondary">
+      {segmentDetails}
     </div>
   )
 }

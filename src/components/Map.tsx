@@ -7,12 +7,14 @@ interface MapProps {
   coords: number[][];
   addCoords: (lngLat: number[]) => void;
   addDistance: (distance: number) => void;
+  totalDist: number;
+  setTotalDist: (total: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance }) => {
+const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, setTotalDist }) => {
   const [center, setCenter] = useState<LngLatLike | undefined>([-122.65, 45.5]);
   const [zoom, setZoom] = useState<number>(10.12);
-  const [totalDist, setTotalDist] = useState<number>(0)
+  // const [totalDist, setTotalDist] = useState<number>(0)
   const mapRef: any = useRef();
   const mapContainerRef: any = useRef();
 
@@ -72,7 +74,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance }) => {
           console.log('response:', response);
           const route = response.body.routes[0].geometry;
           const distance = response.body.routes[0].distance;
-          setTotalDist(distance);
+          setTotalDist(parseFloat(distance.toFixed(3)));
 
           if (mapRef.current.getSource('route')) {
             mapRef.current.removeLayer('route');
