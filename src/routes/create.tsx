@@ -1,7 +1,3 @@
-// import { useRef, useEffect } from 'react';
-// import mapboxgl from 'mapbox-gl';
-
-// import 'mapbox-gl/dist/mapbox-gl.css';
 import { useState } from "react";
 import Map from "../components/Map";
 import Button from "../utilities/Button";
@@ -17,19 +13,27 @@ const Create = () => {
   }
 
   const removeLastCoord = () => {
-    setCoords((prevCoords) => prevCoords.slice(0, -1))
+    console.log("distance: ", distance);
+    console.log("coords: ", coords);
+    if (distance.length <= 1) {
+      setTotalDist(0);
+    }
+    setCoords((prevCoords) => prevCoords.slice(0, -1));
+    setDistance((prevDistance) => prevDistance.slice(0, -1));
   }
 
   const clearCoords = () => {
     setCoords([]);
+    setDistance([]);
+    setTotalDist(0);
   }
 
   const addDistance = (distance: number) => {
-    setDistance((prevDistance) => [...prevDistance, distance])
+    setDistance((prevDistance) => [...prevDistance, distance]);
   }
 
   const saveRoute = () => {
-    console.log("routesaved")
+    console.log("routesaved");
   }
 
   return (
@@ -62,7 +66,7 @@ const Create = () => {
           handleClick={clearCoords}
         />
         <div className="border-secondary border-4 rounded-lg p-2">
-          <p className="text-sm underline">Total distance:</p>
+          <p className="text-md text-white/60">Total distance:</p>
           <p className="text-lg">{totalDist} meters</p>
         </div>
         <SegmentDetails

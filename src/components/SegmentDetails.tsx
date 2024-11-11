@@ -3,13 +3,14 @@ interface SegmentProps {
 }
 
 const SegmentDetails: React.FC<SegmentProps> = ({ distance }) => {
-  // console.log("SD distance", distance)
+
+  // console.log("seg details distance: ", distance)
 
   const segmentDetails = distance.map((dist, index) => {
     return (
       <div key={index} className="py-1">
-        <p className="underline text-sm">Segment {index + 1}</p>
-        <p className="text-lg">{dist}m</p>
+        <p className="text-sm text-white/60">Segment {index + 1}</p>
+        <p className="text-lg">{dist} meters</p>
       </div>
     )
   })
@@ -20,4 +21,4 @@ const SegmentDetails: React.FC<SegmentProps> = ({ distance }) => {
   )
 }
 
-export default SegmentDetails
+export default SegmentDetails;

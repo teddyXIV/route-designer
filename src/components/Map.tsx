@@ -105,7 +105,9 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
           });
           console.log("distance", distance)
           const segDist = (distance - totalDist)
-          addDistance(parseFloat(segDist.toFixed(3)));
+          if (segDist > 0) {
+            addDistance(parseFloat(segDist.toFixed(3)))
+          }
         })
         .catch((error: any) => {
           console.error('Error fetching directions:', error);
