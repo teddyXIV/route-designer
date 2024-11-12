@@ -73,10 +73,11 @@ const Create = () => {
         />
         <div className="border-secondary border-4 rounded-lg p-2">
           <p className="text-md text-white/60">Total distance:</p>
-          <p className="text-lg">{totalDist} meters</p>
+          <p className="text-lg font-semibold">{totalDist} meters</p>
         </div>
         <SegmentDetails
-          distance={distance} />
+          distance={distance}
+          elevations={elevation} />
       </div>
     </>
   )
