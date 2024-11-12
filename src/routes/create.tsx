@@ -7,7 +7,7 @@ const Create = () => {
   const [coords, setCoords] = useState<number[][]>([]);
   const [distance, setDistance] = useState<number[]>([]);
   const [totalDist, setTotalDist] = useState<number>(0);
-  const [elevation, setElevation] = useState<number[]>([]);
+  const [elevation, setElevation] = useState<number[][]>([]);
 
   const addCoords = (lngLat: number[]) => {
     setCoords((prevCoords) => [...prevCoords, lngLat]);
@@ -33,7 +33,7 @@ const Create = () => {
     setDistance((prevDistance) => [...prevDistance, distance]);
   }
 
-  const addElevation = (elev: number) => {
+  const addElevation = (elev: number[]) => {
     setElevation((prevElevation) => [...prevElevation, elev]);
   }
 

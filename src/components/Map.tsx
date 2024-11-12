@@ -9,7 +9,7 @@ interface MapProps {
   addDistance: (distance: number) => void;
   totalDist: number;
   setTotalDist: (total: number) => void;
-  addElevation: (elevation: number) => void;
+  addElevation: (elevation: number[]) => void;
 }
 
 const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, setTotalDist, addElevation }) => {
@@ -60,14 +60,6 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
 
         addCoords(lngLat);
 
-        const pointElevation = mapRef.current.queryTerrainElevation(lngLat);
-
-        if (pointElevation !== null) {
-          console.log("pointElevation: ", pointElevation);
-          addElevation(parseFloat(pointElevation.toFixed(3)));
-        } else {
-          console.log("No elevation data available")
-        }
       });
     }
 
@@ -79,7 +71,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
   useEffect(() => {
 
     const markers = coords.map(coord =>
-      new mapboxgl.Marker({ color: '#37FF8B' })
+      new mapboxgl.Marker({ color: '#FF6542' })
         .setLngLat(coord as [number, number])
         .addTo(mapRef.current)
     );
@@ -100,6 +92,18 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
           const route = response.body.routes[0].geometry;
           const distance = response.body.routes[0].distance;
           setTotalDist(parseFloat(distance.toFixed(3)));
+
+          const routeElevations = route.coordinates.map((coord: LngLatLike) => {
+            const elev = mapRef.current.queryTerrainElevation(coord);
+            return parseFloat(elev.toFixed(3))
+          })
+
+          if (routeElevations !== null) {
+            addElevation(routeElevations);
+            console.log(routeElevations)
+          } else {
+            console.log("No elevation data available")
+          }
 
           if (mapRef.current.getSource('route')) {
             mapRef.current.removeLayer('route');
@@ -124,11 +128,11 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
               'line-cap': 'round',
             },
             paint: {
-              'line-color': '#108342',
+              'line-color': '#37FF8B',
               'line-width': 4,
             },
           });
-          console.log("distance", distance)
+
           const segDist = (distance - totalDist)
           if (segDist > 0) {
             addDistance(parseFloat(segDist.toFixed(3)))
