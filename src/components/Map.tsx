@@ -14,17 +14,33 @@ interface MapProps {
 const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, setTotalDist }) => {
   const [center, setCenter] = useState<LngLatLike | undefined>([-122.65, 45.5]);
   const [zoom, setZoom] = useState<number>(10.12);
-  // const [totalDist, setTotalDist] = useState<number>(0)
   const mapRef: any = useRef();
   const mapContainerRef: any = useRef();
+
+  const [elevation, setElevation] = useState<number>();
 
   useEffect(() => {
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
+      // style: 'mapbox://styles/mapbox/terrain-rgb',
+      // style: 'mapbox://styles/mapbox/dark-v11',
+      style: 'mapbox://styles/mapbox/satellite-streets-v12',
       center: center,
+      pitch: 80,
+      bearing: 41,
       zoom: zoom,
+    });
+
+    mapRef.current.on('style.load', () => {
+      mapRef.current.addSource('mapbox-dem', {
+        type: 'raster-dem',
+        url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+        tileSize: 512,
+        maxzoom: 14
+      });
+      mapRef.current.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
     });
 
     mapRef.current.on('move', () => {
@@ -41,14 +57,38 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
   }, []);
 
   useEffect(() => {
-    if (mapRef.current) {
+    mapRef.current.on('load', () => {
       mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
         const lngLat = e.lngLat.toArray();
 
         addCoords(lngLat);
 
+        const pointElevation = mapRef.current.queryTerrainElevation(lngLat);
+
+        if (pointElevation !== null) {
+          console.log("pointElevation: ", pointElevation);
+          setElevation(pointElevation);
+        } else {
+          console.log("No elevation daata available")
+        }
       });
-    }
+    });
+    // if (mapRef.current) {
+    //   mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
+    //     const lngLat = e.lngLat.toArray();
+
+    //     addCoords(lngLat);
+
+    //     mapRef.current.queryTerrainElevation(lngLat).then((elevation: number) => {
+    //       setElevation(elevation);
+    //     });
+    //   });
+    //   console.log("elevation: ", elevation);
+    // }
+
+    // return () => {
+    //   mapRef.current.remove()
+    // };
   }, []);
 
   useEffect(() => {
