@@ -7,6 +7,7 @@ const Create = () => {
   const [coords, setCoords] = useState<number[][]>([]);
   const [distance, setDistance] = useState<number[]>([]);
   const [totalDist, setTotalDist] = useState<number>(0);
+  const [elevation, setElevation] = useState<number[]>([]);
 
   const addCoords = (lngLat: number[]) => {
     setCoords((prevCoords) => [...prevCoords, lngLat]);
@@ -32,6 +33,10 @@ const Create = () => {
     setDistance((prevDistance) => [...prevDistance, distance]);
   }
 
+  const addElevation = (elev: number) => {
+    setElevation((prevElevation) => [...prevElevation, elev]);
+  }
+
   const saveRoute = () => {
     console.log("routesaved");
   }
@@ -44,7 +49,8 @@ const Create = () => {
           addCoords={addCoords}
           addDistance={addDistance}
           totalDist={totalDist}
-          setTotalDist={setTotalDist} />
+          setTotalDist={setTotalDist}
+          addElevation={addElevation} />
       </div>
       <div className="flex flex-col rounded-lg text-white">
         <Button
