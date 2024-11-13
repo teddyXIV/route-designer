@@ -18,6 +18,8 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
   const mapRef: any = useRef();
   const mapContainerRef: any = useRef();
 
+  const [allElev, setAllElev] = useState<number[]>([]);
+
   useEffect(() => {
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -88,7 +90,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
         })
         .send()
         .then((response: any) => {
-          console.log('response:', response);
+          // console.log('response:', response);
           const route = response.body.routes[0].geometry;
           const distance = response.body.routes[0].distance;
           setTotalDist(parseFloat(distance.toFixed(3)));
@@ -99,11 +101,19 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
           })
 
           if (routeElevations !== null) {
-            addElevation(routeElevations);
-            console.log(routeElevations)
+            const newElevs = routeElevations.slice(allElev.length);
+            console.log(newElevs);
+
+            if (newElevs.length > 0) {
+              addElevation(newElevs);
+            }
+            // console.log("routeElevations: ", routeElevations)
           } else {
             console.log("No elevation data available")
           }
+
+          setAllElev(routeElevations);
+          console.log(allElev);
 
           if (mapRef.current.getSource('route')) {
             mapRef.current.removeLayer('route');
@@ -144,6 +154,9 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
     } else if (mapRef.current.getSource('route')) {
       mapRef.current.removeLayer('route');
       mapRef.current.removeSource('route');
+      setAllElev([]);
+    } else {
+      setAllElev([]);
     }
 
     return () => {

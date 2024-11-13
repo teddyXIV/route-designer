@@ -5,10 +5,10 @@ interface SegmentProps {
 
 const SegmentDetails: React.FC<SegmentProps> = ({ distance, elevations }) => {
 
-  // console.log("seg details distance: ", distance)
+  // console.log("seg details elevations: ", elevations)
 
   const segmentDetails = distance.map((dist, index) => {
-    const maxElev = Math.max(...elevations[index])
+    const maxElev = elevations.length > 0 ? Math.max(...elevations[index]) : "N/A";
 
     return (
       <div key={index} className="py-1">

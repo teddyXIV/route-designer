@@ -14,19 +14,25 @@ const Create = () => {
   }
 
   const removeLastCoord = () => {
-    console.log("distance: ", distance);
-    console.log("coords: ", coords);
+    // console.log("distance: ", distance);
+    // console.log("coords: ", coords);
+    // console.log("elev: ", elevation)
     if (distance.length <= 1) {
       setTotalDist(0);
+      setElevation([]);
     }
-    setCoords((prevCoords) => prevCoords.slice(0, -1));
+
     setDistance((prevDistance) => prevDistance.slice(0, -1));
+    setElevation((prevElevation) => prevElevation.slice(0, -1));
+
+    setCoords((prevCoords) => prevCoords.slice(0, -1));
   }
 
   const clearCoords = () => {
     setCoords([]);
     setDistance([]);
     setTotalDist(0);
+    setElevation([]);
   }
 
   const addDistance = (distance: number) => {
