@@ -2,6 +2,7 @@ import { useState } from "react";
 import Map from "../components/Map";
 import Button from "../utilities/Button";
 import SegmentDetails from "../components/SegmentDetails";
+import RouteGraph from "../components/RouteGraph";
 
 const Create = () => {
   const [coords, setCoords] = useState<number[][]>([]);
@@ -59,6 +60,7 @@ const Create = () => {
           addElevation={addElevation} />
       </div>
       <div className="flex flex-col rounded-lg text-white">
+        <RouteGraph />
         <Button
           text="Save route"
           containerStyles="bg-primary mb-2"

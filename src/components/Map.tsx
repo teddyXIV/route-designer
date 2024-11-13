@@ -113,7 +113,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
           }
 
           setAllElev(routeElevations);
-          console.log(allElev);
+          // console.log(allElev);
 
           if (mapRef.current.getSource('route')) {
             mapRef.current.removeLayer('route');
