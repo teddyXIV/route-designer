@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import * as d3 from 'd3';
+import { createTicks } from '../helpers/routeGraphHelpers';
 
 interface DataPoint {
   x: number;
@@ -14,33 +15,27 @@ interface GraphProps {
 
 const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints }) => {
 
+  const [elevMax, setElevMax] = useState<number>(100)
+
   const xValues = Array.from({ length: routePoints }, (_, i) => i);
 
-  const elevMax = allElevations.length > 0 ? Math.max(...allElevations) : 100;
+  useEffect(() => {
+    const newMax = Math.max(...allElevations)
+    setElevMax(newMax)
+
+  }, [allElevations])
 
   const chartData = xValues.map((value, i) => {
     return { x: value, y: allElevations[i] }
   })
-  console.log(allElevations);
-  console.log("charData: ", chartData)
-
-  // Utility function to create scale and ticks
-  const createTicks = (domain: number[], range: number[]) => {
-    const scale = d3.scaleLinear().domain(domain).range(range);
-    return scale.ticks().map((value) => ({
-      value,
-      // offset: orientation === 'x' ? scale(value) : scale(value),
-      offset: scale(value),
-    }));
-  };
 
   // Memoized X-axis and Y-axis ticks
   const xTicks = useMemo(() => createTicks([0, 100], [10, 290]), []);
-  const yTicks = useMemo(() => createTicks([0, 100], [200, 0]), []);
+  const yTicks = useMemo(() => createTicks([0, elevMax], [200, 0]), [elevMax]);
 
   // Scales
-  const xScale = useMemo(() => d3.scaleLinear().domain([0, 100]).range([10, 290]), []);
-  const yScale = useMemo(() => d3.scaleLinear().domain([0, elevMax]).range([200, 0]), []);
+  const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, 290]), [routePoints]);
+  const yScale = useMemo(() => d3.scaleLinear().domain([0, elevMax]).range([200, 0]), [yTicks]);
 
   const areaGraph = useMemo(() => {
     const areaGenerator = d3.area<DataPoint>()
