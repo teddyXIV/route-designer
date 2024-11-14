@@ -6,8 +6,13 @@ interface DataPoint {
   y: number;
 }
 
+interface GraphProps {
+  allElevations: number[];
+  routePoints: number;
+}
 
-const RouteGraph = () => {
+
+const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints }) => {
 
   const data = useMemo<DataPoint[]>(() => [
     { x: 0, y: 20 },
@@ -17,6 +22,15 @@ const RouteGraph = () => {
     { x: 80, y: 80 },
     { x: 100, y: 50 }
   ], []);
+
+  const xValues = Array.from({ length: routePoints }, (_, i) => i);
+
+  const chartData = xValues.map((value, i) => {
+    return { x: value, y: allElevations[i] }
+  })
+  console.log(allElevations);
+  console.log("charData: ", chartData)
+
   // Utility function to create scale and ticks
   const createTicks = (domain: number[], range: number[]) => {
     const scale = d3.scaleLinear().domain(domain).range(range);
@@ -37,13 +51,15 @@ const RouteGraph = () => {
 
   const areaGraph = useMemo(() => {
     const areaGenerator = d3.area<DataPoint>()
+      // .x(d => xScale(d.x))
       .x(d => xScale(d.x))
       .y0(yScale(0))
+      // .y1(d => yScale(d.y))
       .y1(d => yScale(d.y))
       .curve(d3.curveMonotoneX);
 
-    return areaGenerator(data) || undefined;
-  }, [data, xScale, yScale])
+    return areaGenerator(chartData) || undefined;
+  }, [chartData, xScale, yScale])
 
   return (
     <svg width="300" height="220">
