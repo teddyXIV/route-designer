@@ -14,16 +14,9 @@ interface GraphProps {
 
 const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints }) => {
 
-  const data = useMemo<DataPoint[]>(() => [
-    { x: 0, y: 20 },
-    { x: 20, y: 40 },
-    { x: 40, y: 35 },
-    { x: 60, y: 60 },
-    { x: 80, y: 80 },
-    { x: 100, y: 50 }
-  ], []);
-
   const xValues = Array.from({ length: routePoints }, (_, i) => i);
+
+  const elevMax = allElevations.length > 0 ? Math.max(...allElevations) : 100;
 
   const chartData = xValues.map((value, i) => {
     return { x: value, y: allElevations[i] }
@@ -47,7 +40,7 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints }) => {
 
   // Scales
   const xScale = useMemo(() => d3.scaleLinear().domain([0, 100]).range([10, 290]), []);
-  const yScale = useMemo(() => d3.scaleLinear().domain([0, 100]).range([200, 0]), []);
+  const yScale = useMemo(() => d3.scaleLinear().domain([0, elevMax]).range([200, 0]), []);
 
   const areaGraph = useMemo(() => {
     const areaGenerator = d3.area<DataPoint>()
