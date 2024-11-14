@@ -10,10 +10,11 @@ interface DataPoint {
 interface GraphProps {
   allElevations: number[];
   routePoints: number;
+  graphWidth: number;
 }
 
 
-const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints }) => {
+const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWidth }) => {
 
   const [elevMax, setElevMax] = useState<number>(100)
 
@@ -30,11 +31,11 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints }) => {
   })
 
   // Memoized X-axis and Y-axis ticks
-  const xTicks = useMemo(() => createTicks([0, 100], [10, 290]), []);
+  const xTicks = useMemo(() => createTicks([0, 100], [10, (graphWidth - 10)]), [graphWidth]);
   const yTicks = useMemo(() => createTicks([0, elevMax], [200, 0]), [elevMax]);
 
   // Scales
-  const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, 290]), [routePoints]);
+  const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, (graphWidth - 10)]), [routePoints, graphWidth]);
   const yScale = useMemo(() => d3.scaleLinear().domain([0, elevMax]).range([200, 0]), [yTicks]);
 
   const areaGraph = useMemo(() => {
@@ -50,7 +51,7 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints }) => {
   }, [chartData, xScale, yScale])
 
   return (
-    <svg width="300" height="220">
+    <svg width={graphWidth} height="220">
       {/* X-axis line */}
       <line x1="10" y1="200" x2="290" y2="200" stroke="currentColor" />
 

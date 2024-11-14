@@ -11,15 +11,30 @@ interface MapProps {
   setTotalDist: (total: number) => void;
   addElevation: (elevation: number[]) => void;
   updateRoutePoints: (totalPoints: number) => void;
+  updateMapWidth: (newWidth: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, setTotalDist, addElevation, updateRoutePoints }) => {
+const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, setTotalDist, addElevation, updateRoutePoints, updateMapWidth }) => {
   const [center, setCenter] = useState<LngLatLike | undefined>([-122.65, 45.5]);
   const [zoom, setZoom] = useState<number>(10.12);
   const mapRef: any = useRef();
   const mapContainerRef: any = useRef();
 
   const [allElev, setAllElev] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (mapContainerRef.current) {
+      updateMapWidth(mapContainerRef.current.offsetWidth)
+    }
+
+    const handleResize = () => {
+      if (mapContainerRef.current) {
+        updateMapWidth(mapContainerRef.current.offsetWidth);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [])
 
   useEffect(() => {
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;

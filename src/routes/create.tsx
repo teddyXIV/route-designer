@@ -11,10 +11,17 @@ const Create = () => {
   const [elevation, setElevation] = useState<number[][]>([]);
   const [routePoints, setRoutePoints] = useState<number>(0);
   const [allElevations, setAllElevations] = useState<number[]>([]);
+  const [mapWidth, setMapWidth] = useState<number>(0)
 
   useEffect(() => {
     setAllElevations(elevation.flat());
   }, [elevation])
+
+  console.log("MapWidth:", mapWidth);
+
+  const updateMapWidth = (newWidth: number) => {
+    setMapWidth(newWidth)
+  }
 
   const addCoords = (lngLat: number[]) => {
     setCoords((prevCoords) => [...prevCoords, lngLat]);
@@ -61,6 +68,11 @@ const Create = () => {
   return (
     <>
       <div className="rounded-lg bg-black col-span-3">
+        <RouteGraph
+          allElevations={allElevations}
+          routePoints={routePoints}
+          graphWidth={mapWidth}
+        />
         <Map
           coords={coords}
           addCoords={addCoords}
@@ -69,12 +81,15 @@ const Create = () => {
           setTotalDist={setTotalDist}
           addElevation={addElevation}
           updateRoutePoints={updateRoutePoints}
+          updateMapWidth={updateMapWidth}
         />
       </div>
       <div className="flex flex-col rounded-lg text-white">
-        <RouteGraph
+        {/* <RouteGraph
           allElevations={allElevations}
-          routePoints={routePoints} />
+          routePoints={routePoints}
+          graphWidth={mapWidth}
+        /> */}
         <Button
           text="Save route"
           containerStyles="bg-primary mb-2"
