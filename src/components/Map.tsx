@@ -10,9 +10,10 @@ interface MapProps {
   totalDist: number;
   setTotalDist: (total: number) => void;
   addElevation: (elevation: number[]) => void;
+  updateRoutePoints: (totalPoints: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, setTotalDist, addElevation }) => {
+const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, setTotalDist, addElevation, updateRoutePoints }) => {
   const [center, setCenter] = useState<LngLatLike | undefined>([-122.65, 45.5]);
   const [zoom, setZoom] = useState<number>(10.12);
   const mapRef: any = useRef();
@@ -113,7 +114,8 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
           }
 
           setAllElev(routeElevations);
-          console.log(allElev);
+          updateRoutePoints(routeElevations.length)
+          // console.log(allElev);
 
           if (mapRef.current.getSource('route')) {
             mapRef.current.removeLayer('route');
@@ -155,8 +157,10 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
       mapRef.current.removeLayer('route');
       mapRef.current.removeSource('route');
       setAllElev([]);
+      updateRoutePoints(allElev.length)
     } else {
       setAllElev([]);
+      updateRoutePoints(allElev.length)
     }
 
     return () => {

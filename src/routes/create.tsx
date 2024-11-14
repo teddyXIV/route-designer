@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Map from "../components/Map";
 import Button from "../utilities/Button";
 import SegmentDetails from "../components/SegmentDetails";
+import RouteGraph from "../components/RouteGraph";
 
 const Create = () => {
   const [coords, setCoords] = useState<number[][]>([]);
   const [distance, setDistance] = useState<number[]>([]);
   const [totalDist, setTotalDist] = useState<number>(0);
   const [elevation, setElevation] = useState<number[][]>([]);
+  const [routePoints, setRoutePoints] = useState<number>(0);
+  const [allElevations, setAllElevations] = useState<number[]>([]);
+
+  useEffect(() => {
+    setAllElevations(elevation.flat());
+  }, [elevation])
 
   const addCoords = (lngLat: number[]) => {
     setCoords((prevCoords) => [...prevCoords, lngLat]);
+  }
+
+  const updateRoutePoints = (points: number) => {
+    setRoutePoints(points)
   }
 
   const removeLastCoord = () => {
@@ -56,9 +67,14 @@ const Create = () => {
           addDistance={addDistance}
           totalDist={totalDist}
           setTotalDist={setTotalDist}
-          addElevation={addElevation} />
+          addElevation={addElevation}
+          updateRoutePoints={updateRoutePoints}
+        />
       </div>
       <div className="flex flex-col rounded-lg text-white">
+        <RouteGraph
+          allElevations={allElevations}
+          routePoints={routePoints} />
         <Button
           text="Save route"
           containerStyles="bg-primary mb-2"
