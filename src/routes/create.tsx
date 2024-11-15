@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Map from "../components/Map";
 import Button from "../utilities/Button";
 import SegmentDetails from "../components/SegmentDetails";
@@ -13,15 +13,27 @@ const Create = () => {
   const [allElevations, setAllElevations] = useState<number[]>([]);
   const [mapWidth, setMapWidth] = useState<number>(0)
 
+  const detailsRef: any = useRef()
+
   useEffect(() => {
     setAllElevations(elevation.flat());
   }, [elevation])
 
-  console.log("MapWidth:", mapWidth);
+  useEffect(() => {
+    if (detailsRef.current) {
+      setMapWidth(detailsRef.current.offsetWidth)
+    }
 
-  const updateMapWidth = (newWidth: number) => {
-    setMapWidth(newWidth)
-  }
+    const handleResize = () => {
+      if (detailsRef.current) {
+        setMapWidth(detailsRef.current.offsetWidth);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [])
+
+  console.log("MapWidth:", mapWidth);
 
   const addCoords = (lngLat: number[]) => {
     setCoords((prevCoords) => [...prevCoords, lngLat]);
@@ -68,11 +80,6 @@ const Create = () => {
   return (
     <>
       <div className="rounded-lg bg-black col-span-3">
-        <RouteGraph
-          allElevations={allElevations}
-          routePoints={routePoints}
-          graphWidth={mapWidth}
-        />
         <Map
           coords={coords}
           addCoords={addCoords}
@@ -81,15 +88,12 @@ const Create = () => {
           setTotalDist={setTotalDist}
           addElevation={addElevation}
           updateRoutePoints={updateRoutePoints}
-          updateMapWidth={updateMapWidth}
         />
       </div>
-      <div className="flex flex-col rounded-lg text-white">
-        {/* <RouteGraph
-          allElevations={allElevations}
-          routePoints={routePoints}
-          graphWidth={mapWidth}
-        /> */}
+      <div
+        className="flex flex-col rounded-lg text-white"
+        ref={detailsRef}
+      >
         <Button
           text="Save route"
           containerStyles="bg-primary mb-2"
@@ -108,10 +112,15 @@ const Create = () => {
           textStyles="white"
           handleClick={clearCoords}
         />
-        <div className="border-secondary border-4 rounded-lg p-2">
+        <div className="border-secondary border-4 rounded-lg p-2 mb-2">
           <p className="text-md text-white/60">Total distance:</p>
           <p className="text-lg font-semibold">{totalDist} meters</p>
         </div>
+        <RouteGraph
+          allElevations={allElevations}
+          routePoints={routePoints}
+          graphWidth={mapWidth}
+        />
         <SegmentDetails
           distance={distance}
           elevations={elevation} />

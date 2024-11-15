@@ -31,11 +31,11 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWid
   })
 
   // Memoized X-axis and Y-axis ticks
-  const xTicks = useMemo(() => createTicks([0, 100], [10, (graphWidth - 10)]), [graphWidth]);
+  const xTicks = useMemo(() => createTicks([0, 100], [10, (graphWidth)]), [graphWidth]);
   const yTicks = useMemo(() => createTicks([0, elevMax], [200, 0]), [elevMax]);
 
   // Scales
-  const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, (graphWidth - 10)]), [routePoints, graphWidth]);
+  const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, (graphWidth)]), [routePoints, graphWidth]);
   const yScale = useMemo(() => d3.scaleLinear().domain([0, elevMax]).range([200, 0]), [yTicks]);
 
   const areaGraph = useMemo(() => {
