@@ -1,19 +1,21 @@
 import { useState } from 'react';
 
-const SignIn = () => {
+const SignUp = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Email:", email, "Password:", password);
-
+    if (password == confirmPassword) {
+      console.log("Email:", email, "Password:", password);
+    }
   };
 
   return (
     <div className="w-screen h-screen bg-black">
       <div className="bg-black text-white h-screen flex flex-col justify-center items-center">
-        <h1 className="text-primary text-4xl font-bold mb-4">Sign in</h1>
+        <h1 className="text-primary text-4xl font-bold mb-4">Sign up</h1>
         <form onSubmit={handleSubmit}>
           <div>
             <label className="flex flex-col">
@@ -39,6 +41,17 @@ const SignIn = () => {
               />
             </label>
           </div>
+          <div>
+            <label className="flex flex-col">
+              Confirm password:
+              <input
+                className="rounded-lg mb-2 p-1 text-black"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </label>
+          </div>
           <button
             type="submit"
             className="w-full rounded-lg justify-center items-center px-2 py-1 mt-2 bg-primary text-white text-lg font-semibold">
@@ -50,4 +63,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn;
+export default SignUp;
