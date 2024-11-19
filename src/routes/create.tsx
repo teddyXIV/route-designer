@@ -33,8 +33,6 @@ const Create = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [])
 
-  console.log("MapWidth:", mapWidth);
-
   const addCoords = (lngLat: number[]) => {
     setCoords((prevCoords) => [...prevCoords, lngLat]);
   }

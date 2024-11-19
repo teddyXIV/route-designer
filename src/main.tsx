@@ -8,6 +8,7 @@ import Root from './routes/root.tsx';
 import ErrorPage from "./error-page.tsx";
 import Home from './routes/home.tsx';
 import Create from './routes/create.tsx';
+import SignIn from './routes/signIn.tsx';
 import './index.css'
 
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "create/",
         element: <Create />
+      },
+      {
+        path: "signin/",
+        element: <SignIn />
       }
     ]
   },
