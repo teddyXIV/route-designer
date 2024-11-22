@@ -21,6 +21,8 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
 
   const [allElev, setAllElev] = useState<number[]>([]);
 
+
+  //renders map, allows movement
   useEffect(() => {
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -56,6 +58,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
     };
   }, []);
 
+  //adds coordinates to state on click
   useEffect(() => {
     if (mapRef.current) {
       mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
@@ -71,8 +74,8 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
     // };
   }, []);
 
+  //creates markers and routes on map when coords change
   useEffect(() => {
-
     const markers = coords.map(coord =>
       new mapboxgl.Marker({ color: '#FF6542' })
         .setLngLat(coord as [number, number])
@@ -172,7 +175,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
   return (
     <div
       ref={mapContainerRef}
-      className="w-100 rounded-lg h-screen"
+      className="w-100 rounded-lg h-[36rem]"
     />
   );
 };

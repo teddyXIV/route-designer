@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Map from "../components/Map";
 import Button from "../utilities/Button";
-import SegmentDetails from "../components/SegmentDetails";
+// import SegmentDetails from "../components/SegmentDetails";
 import RouteGraph from "../components/RouteGraph";
 
 const Create = () => {
@@ -11,13 +11,33 @@ const Create = () => {
   const [elevation, setElevation] = useState<number[][]>([]);
   const [routePoints, setRoutePoints] = useState<number>(0);
   const [allElevations, setAllElevations] = useState<number[]>([]);
+  const [totalClimb, setTotalClimb] = useState<number>(0);
   const [mapWidth, setMapWidth] = useState<number>(0)
 
   const detailsRef: any = useRef()
 
+  const getTotalClimb = (elevations: number[]) => {
+    if (elevations.length < 2) return 0;
+
+    let total = 0;
+
+    for (let i = 1; i < elevations.length; i++) {
+      if (elevations[i - 1] < elevations[i]) {
+        const diff = elevations[i] - elevations[i - 1];
+        total += diff
+      }
+    }
+    return parseFloat(total.toFixed(3));
+  }
+
   useEffect(() => {
     setAllElevations(elevation.flat());
+    console.log("allelevations: ", allElevations)
   }, [elevation])
+
+  useEffect(() => {
+    setTotalClimb(getTotalClimb(allElevations));
+  }, [allElevations])
 
   useEffect(() => {
     if (detailsRef.current) {
@@ -114,14 +134,18 @@ const Create = () => {
           <p className="text-md text-white/60">Total distance:</p>
           <p className="text-lg font-semibold">{totalDist} meters</p>
         </div>
+        <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+          <p className="text-md text-white/60">Total Elevation Gain:</p>
+          <p className="text-lg font-semibold">{totalClimb} meters</p>
+        </div>
         <RouteGraph
           allElevations={allElevations}
           routePoints={routePoints}
           graphWidth={mapWidth}
         />
-        <SegmentDetails
+        {/* <SegmentDetails
           distance={distance}
-          elevations={elevation} />
+          elevations={elevation} /> */}
       </div>
     </>
   )
