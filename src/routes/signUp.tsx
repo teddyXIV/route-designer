@@ -1,14 +1,23 @@
 import { useState } from 'react';
+import { signUp } from "../../lib/firebase.ts";
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password == confirmPassword) {
-      console.log("Email:", email, "Password:", password);
+      const signedUp = signUp(email, password);
+      console.log(signedUp);
+
+      if (signedUp != null) {
+        navigate('/');
+      }
     }
   };
 

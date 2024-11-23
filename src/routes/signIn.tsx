@@ -1,12 +1,23 @@
 import { useState } from 'react';
+import { signIn } from '../../lib/firebase';
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Email:", email, "Password:", password);
+
+    const signedIn = signIn(email, password);
+
+    if (signedIn != null) {
+      console.log("signed in")
+      navigate('/');
+    }
 
   };
 

@@ -24,8 +24,16 @@
 
 import images from '../constants/logos.ts';
 import { Outlet, Link } from "react-router-dom";
+import Button from '../utilities/Button.tsx';
+import { logOut } from '../../lib/firebase.ts';
+import { useAuth } from '../context/AuthContext.tsx';
 
 const Root = () => {
+
+  const { currentUser } = useAuth();
+
+
+
   return (
     <div className="w-screen h-screen bg-black overflow-x-hidden scrollbar scrollbar-track-secondary scrollbar-thumb-tertiary">
       {/* Navbar */}
@@ -38,6 +46,22 @@ const Root = () => {
           />
           <h1 className="text-white text-2xl font-bold px-2">RouteDesigner</h1>
         </Link>
+        {currentUser ?
+          <Button
+            text="Sign out"
+            containerStyles="bg-secondary border-2 border-primary mb-2 mt-2 ml-auto"
+            textStyles="white"
+            handleClick={() => logOut()}
+          />
+          :
+          <button className="rounded-lg justify-center items-center px-2 py-1 bg-primary ml-auto">
+            <Link to="/signin">
+              <p
+                className="text-lg text-white">
+                Sign in
+              </p>
+            </Link>
+          </button>}
       </header>
 
       {/* Main Content */}

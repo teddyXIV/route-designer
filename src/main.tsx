@@ -11,6 +11,7 @@ import Create from './routes/create.tsx';
 import SignUp from './routes/signUp.tsx'
 import SignIn from './routes/signIn.tsx'
 import './index.css'
+import { AuthProvider } from './context/AuthContext.tsx';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )
