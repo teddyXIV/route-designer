@@ -22,7 +22,9 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
   const [allElev, setAllElev] = useState<number[]>([]);
 
 
+  //===========================================================================
   //renders map, allows movement
+  //===========================================================================
   useEffect(() => {
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -30,8 +32,6 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/satellite-streets-v12',
       center: center,
-      // pitch: 40,
-      // bearing: 41,
       zoom: zoom,
     });
 
@@ -58,24 +58,24 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
     };
   }, []);
 
+
+  //=====================================================================================
   //adds coordinates to state on click
+  //=====================================================================================
   useEffect(() => {
     if (mapRef.current) {
       mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
         const lngLat = e.lngLat.toArray();
 
-        //working
         addCoords(lngLat);
 
       });
     }
-
-    // return () => {
-    //   mapRef.current.remove()
-    // };
   }, []);
 
+  //======================================================================================
   //creates markers and routes on map when coords change
+  //======================================================================================
   useEffect(() => {
     const markers = coords.map(coord =>
       new mapboxgl.Marker({ color: '#FF6542' })
@@ -95,7 +95,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
         })
         .send()
         .then((response: any) => {
-          // console.log('response:', response);
+
           const route = response.body.routes[0].geometry;
           const distance = response.body.routes[0].distance;
           updateTotalDistance(parseFloat(distance.toFixed(3)));
@@ -108,21 +108,18 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
           if (routeElevations !== null) {
 
             const newElevs = routeElevations.slice(allElev.length);
-            // console.log(newElevs);
 
             if (newElevs.length > 0) {
-              console.log("map trying to add elevs")
               addElevation(newElevs);
             }
-            // console.log("routeElevations: ", routeElevations)
+
           } else {
             console.log("No elevation data available")
           }
 
           setAllElev(routeElevations);
-          //working
+
           updateRoutePoints(routeElevations.length)
-          // console.log(allElev);
 
           if (mapRef.current.getSource('route')) {
             mapRef.current.removeLayer('route');

@@ -25,13 +25,6 @@ const Create = () => {
     totalClimb: 0
   })
 
-  // const [coords, setCoords] = useState<number[][]>([]);
-  // const [distance, setDistance] = useState<number[]>([]);
-  // const [totalDist, setTotalDist] = useState<number>(0);
-  // const [elevation, setElevation] = useState<number[][]>([]);
-  // const [routePoints, setRoutePoints] = useState<number>(0);
-  // const [allElevations, setAllElevations] = useState<number[]>([]);
-  // const [totalClimb, setTotalClimb] = useState<number>(0);
   const [mapWidth, setMapWidth] = useState<number>(0)
 
   const detailsRef: any = useRef()
@@ -50,44 +43,32 @@ const Create = () => {
     return parseFloat(total.toFixed(3));
   }
 
-  useEffect(() => {
-    console.log("coords", route.coords)
-    console.log("distance", route.distance)
-    console.log("totalDistance", route.totalDistance)
-    console.log("elevations", route.elevations)
-    console.log("points", route.points)
-    console.log("allElevations", route.allElevations)
-    console.log("totalClimb", route.totalClimb)
+  // useEffect(() => {
+  //   console.log("coords", route.coords)
+  //   console.log("distance", route.distance)
+  //   console.log("totalDistance", route.totalDistance)
+  //   console.log("elevations", route.elevations)
+  //   console.log("points", route.points)
+  //   console.log("allElevations", route.allElevations)
+  //   console.log("totalClimb", route.totalClimb)
 
-  }, [route])
+  // }, [route])
 
 
   //========================================================================
-  // Update allElevations when elevations changes
+  // Update allElevations and totalClimb when elevations changes
   //========================================================================
   useEffect(() => {
-    // setAllElevations(elevation.flat());
+
+    const flatElevations = route.elevations.flat();
 
     setRoute({
       ...route,
-      allElevations: route.elevations.flat(),
-      totalClimb: getTotalClimb(route.elevations.flat())
+      allElevations: flatElevations,
+      totalClimb: getTotalClimb(flatElevations)
     })
-    console.log("allelevations: ", route.allElevations)
+
   }, [route.elevations])
-
-
-  //============================================================================
-  // Update totalClimb when allElevations changes
-  //============================================================================
-  // useEffect(() => {
-  //   // setTotalClimb(getTotalClimb(route.allElevations));
-  //   console.log("set total climb triggered")
-  //   setRoute({
-  //     ...route,
-  //     totalClimb: getTotalClimb(route.allElevations)
-  //   })
-  // }, [route.allElevations])
 
 
   //=============================================================================
@@ -112,7 +93,6 @@ const Create = () => {
   // route property update functions
   //==============================================================================
   const updateTotalDistance = (newTotal: number) => {
-    console.log("updateTotalDistance triggered", newTotal)
 
     setRoute({
       ...route,
@@ -121,8 +101,6 @@ const Create = () => {
   }
 
   const addCoords = (lngLat: number[]) => {
-    // setCoords((prevCoords) => [...prevCoords, lngLat]);
-    console.log("addCoords triggered");
 
     setRoute((prevRoute) => ({
       ...prevRoute,
@@ -131,8 +109,6 @@ const Create = () => {
   }
 
   const updateRoutePoints = (newPoints: number) => {
-    // setRoutePoints(newPoints)
-    console.log("updatePoints triggered")
 
     setRoute((prevRoute) => ({
       ...prevRoute,
@@ -142,19 +118,12 @@ const Create = () => {
 
   const removeLastCoord = () => {
     if (route.distance.length <= 1) {
-      // setTotalDist(0);
-      // setElevation([]);
       setRoute({
         ...route,
         elevations: [],
         totalDistance: 0
       })
     }
-
-
-    // setDistance((prevDistance) => prevDistance.slice(0, -1));
-    // setElevation((prevElevation) => prevElevation.slice(0, -1));
-    // setCoords((prevCoords) => prevCoords.slice(0, -1));
 
     setRoute((prevRoute) => ({
       ...prevRoute,
@@ -165,11 +134,6 @@ const Create = () => {
   }
 
   const clearCoords = () => {
-    // setCoords([]);
-    // setDistance([]);
-    // setTotalDist(0);
-    // setElevation([]);
-
     setRoute({
       ...route,
       coords: [],
@@ -180,9 +144,6 @@ const Create = () => {
   }
 
   const addDistance = (dist: number) => {
-    // setDistance((prevDistance) => [...prevDistance, distance]);
-    console.log("addDistance triggered", dist)
-
     setRoute((prevRoute) => ({
       ...prevRoute,
       distance: [...prevRoute.distance, dist]
@@ -190,8 +151,6 @@ const Create = () => {
   }
 
   const addElevation = (elev: number[]) => {
-    // setElevation((prevElevation) => [...prevElevation, elev]);
-    console.log("addElevation triggered", elev)
     setRoute((prevRoute) => ({
       ...prevRoute,
       elevations: [...prevRoute.elevations, elev]
