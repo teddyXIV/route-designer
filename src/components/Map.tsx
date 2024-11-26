@@ -8,12 +8,12 @@ interface MapProps {
   addCoords: (lngLat: number[]) => void;
   addDistance: (distance: number) => void;
   totalDist: number;
-  setTotalDist: (total: number) => void;
+  updateTotalDistance: (total: number) => void;
   addElevation: (elevation: number[]) => void;
   updateRoutePoints: (totalPoints: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, setTotalDist, addElevation, updateRoutePoints }) => {
+const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, updateTotalDistance, addElevation, updateRoutePoints }) => {
   const [center, setCenter] = useState<LngLatLike | undefined>([-122.65, 45.5]);
   const [zoom, setZoom] = useState<number>(10.12);
   const mapRef: any = useRef();
@@ -64,6 +64,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
       mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
         const lngLat = e.lngLat.toArray();
 
+        //working
         addCoords(lngLat);
 
       });
@@ -97,7 +98,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
           // console.log('response:', response);
           const route = response.body.routes[0].geometry;
           const distance = response.body.routes[0].distance;
-          setTotalDist(parseFloat(distance.toFixed(3)));
+          updateTotalDistance(parseFloat(distance.toFixed(3)));
 
           const routeElevations = route.coordinates.map((coord: LngLatLike) => {
             const elev = mapRef.current.queryTerrainElevation(coord);
@@ -105,10 +106,12 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
           })
 
           if (routeElevations !== null) {
+
             const newElevs = routeElevations.slice(allElev.length);
-            console.log(newElevs);
+            // console.log(newElevs);
 
             if (newElevs.length > 0) {
+              console.log("map trying to add elevs")
               addElevation(newElevs);
             }
             // console.log("routeElevations: ", routeElevations)
@@ -117,6 +120,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, se
           }
 
           setAllElev(routeElevations);
+          //working
           updateRoutePoints(routeElevations.length)
           // console.log(allElev);
 
