@@ -85,4 +85,12 @@ const signUp = async (email: string, password: string): Promise<User | null> => 
   }
 };
 
+//==========================================================================================
+//Save new route
+//==========================================================================================
+
+const saveRoute = () => {
+
+}
+
 export { db, auth, signIn, signUp, logOut };
