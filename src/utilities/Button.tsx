@@ -2,7 +2,7 @@ interface ButtonProps {
   text: string;
   containerStyles: string;
   textStyles: string;
-  handleClick: () => void
+  handleClick: () => void | Promise<void>
 }
 
 const Button: React.FC<ButtonProps> = ({ text, containerStyles, textStyles, handleClick }) => {

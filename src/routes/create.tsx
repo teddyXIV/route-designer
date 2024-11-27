@@ -3,9 +3,15 @@ import Map from "../components/Map";
 import Button from "../utilities/Button";
 // import SegmentDetails from "../components/SegmentDetails";
 import RouteGraph from "../components/RouteGraph";
+import { saveRoute } from "../../lib/firebase";
+
+interface LatLng {
+  lat: number;
+  lng: number;
+}
 
 interface Route {
-  coords: number[][];
+  coords: LatLng[];
   distance: number[];
   totalDistance: number;
   elevations: number[][];
@@ -62,11 +68,11 @@ const Create = () => {
 
     const flatElevations = route.elevations.flat();
 
-    setRoute({
-      ...route,
+    setRoute((prevRoute) => ({
+      ...prevRoute,
       allElevations: flatElevations,
       totalClimb: getTotalClimb(flatElevations)
-    })
+    }))
 
   }, [route.elevations])
 
@@ -94,13 +100,15 @@ const Create = () => {
   //==============================================================================
   const updateTotalDistance = (newTotal: number) => {
 
-    setRoute({
-      ...route,
-      totalDistance: newTotal,
-    })
+    setRoute((prevRoute) => ({
+      ...prevRoute,
+      totalDistance: newTotal
+    }))
   }
 
-  const addCoords = (lngLat: number[]) => {
+  const addCoords = (lngLat: LatLng) => {
+
+    console.log("new coords: ", route.coords)
 
     setRoute((prevRoute) => ({
       ...prevRoute,
@@ -161,8 +169,9 @@ const Create = () => {
   //===========================================================================
   // Save route to firestore 
   //===========================================================================
-  const saveRoute = () => {
+  const uploadRoute = async (routeData: Route) => {
     console.log("routesaved");
+    saveRoute(routeData)
   }
 
   return (
@@ -186,7 +195,7 @@ const Create = () => {
           text="Save route"
           containerStyles="bg-primary mb-2"
           textStyles="white"
-          handleClick={saveRoute}
+          handleClick={() => uploadRoute(route)}
         />
         <Button
           text="Remove last point"
