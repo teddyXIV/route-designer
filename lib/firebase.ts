@@ -94,11 +94,15 @@ interface LatLng {
   lng: number;
 }
 
+type ElevMap = {
+  [key: string]: number
+}
+
 interface Route {
   coords: LatLng[];
   distance: number[];
   totalDistance: number;
-  elevations: number[][];
+  elevations: ElevMap[];
   points: number;
   allElevations: number[];
   totalClimb: number;
@@ -106,6 +110,8 @@ interface Route {
 
 
 const saveRoute = async (route: Route) => {
+
+  console.log(route);
 
   try {
     const auth = getAuth();

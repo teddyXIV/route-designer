@@ -10,11 +10,15 @@ interface LatLng {
   lng: number;
 }
 
+type ElevsObj = {
+  [key: string]: number
+}
+
 interface Route {
   coords: LatLng[];
   distance: number[];
   totalDistance: number;
-  elevations: number[][];
+  elevations: ElevsObj[];
   points: number;
   allElevations: number[];
   totalClimb: number;
@@ -49,16 +53,17 @@ const Create = () => {
     return parseFloat(total.toFixed(3));
   }
 
-  // useEffect(() => {
-  //   console.log("coords", route.coords)
-  //   console.log("distance", route.distance)
-  //   console.log("totalDistance", route.totalDistance)
-  //   console.log("elevations", route.elevations)
-  //   console.log("points", route.points)
-  //   console.log("allElevations", route.allElevations)
-  //   console.log("totalClimb", route.totalClimb)
+  useEffect(() => {
+    // console.log("coords", route.coords)
+    // console.log("distance", route.distance)
+    // console.log("totalDistance", route.totalDistance)
+    console.log("elevations", route.elevations)
+    // console.log("points", route.points)
+    // console.log("allElevations", route.allElevations)
+    // console.log("totalClimb", route.totalClimb)
 
-  // }, [route])
+  }, [route.elevations])
+
 
 
   //========================================================================
@@ -66,7 +71,7 @@ const Create = () => {
   //========================================================================
   useEffect(() => {
 
-    const flatElevations = route.elevations.flat();
+    const flatElevations = route.elevations.flatMap((elevObj) => Object.values(elevObj));
 
     setRoute((prevRoute) => ({
       ...prevRoute,
@@ -158,7 +163,8 @@ const Create = () => {
     }))
   }
 
-  const addElevation = (elev: number[]) => {
+  const addElevation = (elev: ElevsObj) => {
+    // console.log("new elevation: ", elev);
     setRoute((prevRoute) => ({
       ...prevRoute,
       elevations: [...prevRoute.elevations, elev]

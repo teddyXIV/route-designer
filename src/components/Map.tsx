@@ -8,13 +8,17 @@ interface LatLng {
   lng: number;
 }
 
+type ElevMap = {
+  [key: string]: number
+}
+
 interface MapProps {
   coords: LatLng[];
   addCoords: (arg0: LatLng) => void;
   addDistance: (distance: number) => void;
   totalDist: number;
   updateTotalDistance: (total: number) => void;
-  addElevation: (elevation: number[]) => void;
+  addElevation: (elevation: ElevMap) => void;
   updateRoutePoints: (totalPoints: number) => void;
 }
 
@@ -121,8 +125,14 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
 
             const newElevs = routeElevations.slice(allElev.length);
 
+            const newElevsObj: ElevMap = {};
+
+            for (let i = 0; i < newElevs.length; i++) {
+              newElevsObj[i] = newElevs[i];
+            }
+
             if (newElevs.length > 0) {
-              addElevation(newElevs);
+              addElevation(newElevsObj);
             }
 
           } else {
