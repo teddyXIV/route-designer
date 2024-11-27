@@ -4,25 +4,7 @@ import Button from "../utilities/Button";
 // import SegmentDetails from "../components/SegmentDetails";
 import RouteGraph from "../components/RouteGraph";
 import { saveRoute } from "../../lib/firebase";
-
-interface LatLng {
-  lat: number;
-  lng: number;
-}
-
-type ElevsObj = {
-  [key: string]: number
-}
-
-interface Route {
-  coords: LatLng[];
-  distance: number[];
-  totalDistance: number;
-  elevations: ElevsObj[];
-  points: number;
-  allElevations: number[];
-  totalClimb: number;
-}
+import { LatLng, ElevsObj, Route } from "../types/dataTypes"
 
 const Create = () => {
   const [route, setRoute] = useState<Route>({
@@ -53,17 +35,19 @@ const Create = () => {
     return parseFloat(total.toFixed(3));
   }
 
-  useEffect(() => {
-    // console.log("coords", route.coords)
-    // console.log("distance", route.distance)
-    // console.log("totalDistance", route.totalDistance)
-    console.log("elevations", route.elevations)
-    // console.log("points", route.points)
-    // console.log("allElevations", route.allElevations)
-    // console.log("totalClimb", route.totalClimb)
+  //======================================================================
+  //Testing
+  //======================================================================
+  // useEffect(() => {
+  // console.log("coords", route.coords)
+  // console.log("distance", route.distance)
+  // console.log("totalDistance", route.totalDistance)
+  // console.log("elevations", route.elevations)
+  // console.log("points", route.points)
+  // console.log("allElevations", route.allElevations)
+  // console.log("totalClimb", route.totalClimb)
 
-  }, [route.elevations])
-
+  // }, [route.elevations])
 
 
   //========================================================================
@@ -112,9 +96,6 @@ const Create = () => {
   }
 
   const addCoords = (lngLat: LatLng) => {
-
-    console.log("new coords: ", route.coords)
-
     setRoute((prevRoute) => ({
       ...prevRoute,
       coords: [...prevRoute.coords, lngLat]
@@ -122,7 +103,6 @@ const Create = () => {
   }
 
   const updateRoutePoints = (newPoints: number) => {
-
     setRoute((prevRoute) => ({
       ...prevRoute,
       points: newPoints
@@ -164,7 +144,6 @@ const Create = () => {
   }
 
   const addElevation = (elev: ElevsObj) => {
-    // console.log("new elevation: ", elev);
     setRoute((prevRoute) => ({
       ...prevRoute,
       elevations: [...prevRoute.elevations, elev]
@@ -176,7 +155,6 @@ const Create = () => {
   // Save route to firestore 
   //===========================================================================
   const uploadRoute = async (routeData: Route) => {
-    console.log("routesaved");
     saveRoute(routeData)
   }
 

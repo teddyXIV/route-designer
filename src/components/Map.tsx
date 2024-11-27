@@ -2,15 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxDirections, { DirectionsWaypoint } from '@mapbox/mapbox-sdk/services/directions';
-
-interface LatLng {
-  lat: number;
-  lng: number;
-}
-
-type ElevMap = {
-  [key: string]: number
-}
+import { LatLng, ElevsObj } from "../types/dataTypes"
 
 interface MapProps {
   coords: LatLng[];
@@ -18,7 +10,7 @@ interface MapProps {
   addDistance: (distance: number) => void;
   totalDist: number;
   updateTotalDistance: (total: number) => void;
-  addElevation: (elevation: ElevMap) => void;
+  addElevation: (elevation: ElevsObj) => void;
   updateRoutePoints: (totalPoints: number) => void;
 }
 
@@ -125,7 +117,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
 
             const newElevs = routeElevations.slice(allElev.length);
 
-            const newElevsObj: ElevMap = {};
+            const newElevsObj: ElevsObj = {};
 
             for (let i = 0; i < newElevs.length; i++) {
               newElevsObj[i] = newElevs[i];

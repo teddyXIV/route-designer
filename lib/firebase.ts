@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { initializeAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, User, getAuth } from "firebase/auth";
 import { getFirestore, collection, doc, setDoc, query, where, getDocs } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
+import { Route } from "../src/types/dataTypes"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -89,26 +90,6 @@ const signUp = async (email: string, password: string): Promise<User | null> => 
 //Save new route
 //==========================================================================================
 
-interface LatLng {
-  lat: number;
-  lng: number;
-}
-
-type ElevMap = {
-  [key: string]: number
-}
-
-interface Route {
-  coords: LatLng[];
-  distance: number[];
-  totalDistance: number;
-  elevations: ElevMap[];
-  points: number;
-  allElevations: number[];
-  totalClimb: number;
-}
-
-
 const saveRoute = async (route: Route) => {
 
   console.log(route);
@@ -121,7 +102,7 @@ const saveRoute = async (route: Route) => {
       throw new Error("User not authenticated");
     }
 
-    const userId = user.uid
+    const userId = user.uid;
 
     const routesCollection = collection(db, "routes");
     const newRouteRef = doc(routesCollection);
@@ -142,4 +123,37 @@ const saveRoute = async (route: Route) => {
   }
 }
 
-export { db, auth, signIn, signUp, logOut, saveRoute };
+//=============================================================================
+//Get all user routes
+//=============================================================================
+
+const getRoutes = async () => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error("User not authenticated")
+    }
+
+    const userId = user.uid;
+    const routesRef = collection(db, 'routes');
+
+    const routesQuery = query(routesRef, where("userId", "==", userId));
+
+    const userRoutesSnap = await getDocs(routesQuery);
+
+    const routes = userRoutesSnap.docs.map((doc) => ({
+      ...doc.data()
+    }));
+
+    console.log(routes);
+    return routes;
+
+  } catch (error) {
+    console.error("Error fetching user routes: ", error);
+    throw error;
+  }
+}
+
+export { db, auth, signIn, signUp, logOut, saveRoute, getRoutes };
