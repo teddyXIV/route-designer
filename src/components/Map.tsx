@@ -1,15 +1,24 @@
 import { useRef, useEffect, useState } from 'react';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import MapboxDirections from '@mapbox/mapbox-sdk/services/directions';
+import MapboxDirections, { DirectionsWaypoint } from '@mapbox/mapbox-sdk/services/directions';
+
+interface LatLng {
+  lat: number;
+  lng: number;
+}
+
+type ElevMap = {
+  [key: string]: number
+}
 
 interface MapProps {
-  coords: number[][];
-  addCoords: (lngLat: number[]) => void;
+  coords: LatLng[];
+  addCoords: (arg0: LatLng) => void;
   addDistance: (distance: number) => void;
   totalDist: number;
   updateTotalDistance: (total: number) => void;
-  addElevation: (elevation: number[]) => void;
+  addElevation: (elevation: ElevMap) => void;
   updateRoutePoints: (totalPoints: number) => void;
 }
 
@@ -65,7 +74,12 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
   useEffect(() => {
     if (mapRef.current) {
       mapRef.current.on('click', (e: mapboxgl.MapMouseEvent) => {
-        const lngLat = e.lngLat.toArray();
+        const lngLat: LatLng = {
+          lat: e.lngLat.lat,
+          lng: e.lngLat.lng
+        };
+
+        console.log("lngLat: ", lngLat)
 
         addCoords(lngLat);
 
@@ -79,18 +93,20 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
   useEffect(() => {
     const markers = coords.map(coord =>
       new mapboxgl.Marker({ color: '#FF6542' })
-        .setLngLat(coord as [number, number])
+        .setLngLat([coord.lng, coord.lat])
         .addTo(mapRef.current)
     );
 
     if (coords.length > 1) {
       const directionsClient = MapboxDirections({ accessToken: mapboxgl.accessToken });
-      const points = coords.map((coord) => ({ coordinates: coord as [number, number] }));
+      const points = coords.map((coord) => ({
+        coordinates: [coord.lng, coord.lat] // Ensure coordinates is a tuple
+      }));
 
       directionsClient
         .getDirections({
           profile: 'cycling',
-          waypoints: points,
+          waypoints: points as DirectionsWaypoint[],
           geometries: 'geojson',
         })
         .send()
@@ -109,8 +125,14 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
 
             const newElevs = routeElevations.slice(allElev.length);
 
+            const newElevsObj: ElevMap = {};
+
+            for (let i = 0; i < newElevs.length; i++) {
+              newElevsObj[i] = newElevs[i];
+            }
+
             if (newElevs.length > 0) {
-              addElevation(newElevs);
+              addElevation(newElevsObj);
             }
 
           } else {

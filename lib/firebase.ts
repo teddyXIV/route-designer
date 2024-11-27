@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { initializeAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, User } from "firebase/auth";
+import { initializeAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, User, getAuth } from "firebase/auth";
 import { getFirestore, collection, doc, setDoc, query, where, getDocs } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -89,8 +89,57 @@ const signUp = async (email: string, password: string): Promise<User | null> => 
 //Save new route
 //==========================================================================================
 
-const saveRoute = () => {
-
+interface LatLng {
+  lat: number;
+  lng: number;
 }
 
-export { db, auth, signIn, signUp, logOut };
+type ElevMap = {
+  [key: string]: number
+}
+
+interface Route {
+  coords: LatLng[];
+  distance: number[];
+  totalDistance: number;
+  elevations: ElevMap[];
+  points: number;
+  allElevations: number[];
+  totalClimb: number;
+}
+
+
+const saveRoute = async (route: Route) => {
+
+  console.log(route);
+
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    const userId = user.uid
+
+    const routesCollection = collection(db, "routes");
+    const newRouteRef = doc(routesCollection);
+
+    const routeData = {
+      ...route,
+      userId,
+      uploadedAt: new Date()
+    };
+
+    await setDoc(newRouteRef, routeData);
+
+    console.log("Document successfully uploaded with ID: ", newRouteRef.id);
+    return newRouteRef.id;
+  } catch (error) {
+    console.error("error uploading route data: ", error);
+    throw error;
+  }
+}
+
+export { db, auth, signIn, signUp, logOut, saveRoute };
