@@ -2,12 +2,34 @@ import { dummyMapData } from "../constants/sampleData.js";
 import MapPost from '../components/MapPost.js';
 import { Link } from "react-router-dom";
 import { getRoutes } from "../../lib/firebase.js";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAuth } from "../context/AuthContext.js";
 
 const Home = () => {
   const [routes, setRoutes] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null)
+  // const [error, setError] = useState<string | null>(null)
+  const [listWidth, setListWidth] = useState<number>(0);
+
+  const { currentUser } = useAuth();
+  const routeListRef: any = useRef();
+
+  useEffect(() => {
+    if (routeListRef.current) {
+      setListWidth(routeListRef.current.offsetWidth)
+    }
+
+    const handleResize = () => {
+      if (routeListRef.current) {
+        setListWidth(routeListRef.current.offsetWidth)
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [])
+
+  console.log("currentUser: ", currentUser)
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -15,7 +37,6 @@ const Home = () => {
         const fetchedRoutes = await getRoutes();
         setRoutes(fetchedRoutes);
       } catch (err) {
-        setError("Failed to fetch routes")
         console.error(err)
       } finally {
         setLoading(false);
@@ -23,22 +44,16 @@ const Home = () => {
     }
 
     fetchRoutes();
-  }, [])
+  }, [currentUser])
 
-  useEffect(() => {
-    console.log("ROUTES: ", routes)
-  }, [routes])
+  // useEffect(() => {
+  //   console.log("ROUTES: ", routes)
+  // }, [routes])
 
   const dummyPosts = dummyMapData.map(post => {
     return (
       <div key={post.id}>
-        <MapPost
-          image={post.image}
-          title={post.title}
-          distance={post.distance}
-          elevation={post.elevation}
-          difficulty={post.difficulty}
-        />
+        <p>LOADING</p>
       </div>
     )
   })
@@ -48,7 +63,9 @@ const Home = () => {
       <div
         key={index}
         className="text-white">
-        <p>{route.totalDistance}</p>
+        <MapPost
+          route={route}
+          width={listWidth} />
       </div>
     )
   })
@@ -60,7 +77,8 @@ const Home = () => {
         <p>02</p>
         <p>03</p>
       </div>
-      <div className="rounded-lg bg-black col-span-2">
+      <div className="rounded-lg bg-black col-span-2"
+        ref={routeListRef}>
         {!loading && routes.length > 0 ? mapPosts : dummyPosts}
       </div>
       <div className="rounded-lg bg-secondary p-4 text-white">

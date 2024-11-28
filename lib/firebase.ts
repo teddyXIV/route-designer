@@ -1,8 +1,17 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { initializeAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, User, getAuth } from "firebase/auth";
+import {
+  initializeAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  createUserWithEmailAndPassword,
+  User,
+  getAuth,
+  setPersistence,
+  browserLocalPersistence
+} from "firebase/auth";
 import { getFirestore, collection, doc, setDoc, query, where, getDocs } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 import { Route } from "../src/types/dataTypes"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,9 +33,17 @@ const app = initializeApp(firebaseConfig);
 
 const auth = initializeAuth(app)
 
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    console.log("Auth persistence set to BLP")
+  })
+  .catch((error) => {
+    console.error("Error setting auth persistence: ", error);
+  })
+
 const db = getFirestore(app);
 
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 
 //===========================================================================
 //Sign in/up/out
@@ -36,9 +53,7 @@ const signIn = async (email: string, password: string) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-    const user = userCredential.user;
-
-    return user;
+    return userCredential.user;
 
   } catch (error: any) {
     console.error('Error signing in:', error.message);

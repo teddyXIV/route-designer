@@ -205,6 +205,7 @@ const Create = () => {
           allElevations={route.allElevations}
           routePoints={route.points}
           graphWidth={mapWidth}
+          graphHeight={200}
         />
         {/* <SegmentDetails
           distance={distance}

@@ -11,10 +11,11 @@ interface GraphProps {
   allElevations: number[];
   routePoints: number;
   graphWidth: number;
+  graphHeight: number
 }
 
 
-const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWidth }) => {
+const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWidth, graphHeight }) => {
 
   const [elevMax, setElevMax] = useState<number>(100)
 
@@ -37,7 +38,7 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWid
 
   // Scales
   const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, (graphWidth)]), [routePoints, graphWidth]);
-  const yScale = useMemo(() => d3.scaleLinear().domain([0, elevMax]).range([200, 0]), [yTicks]);
+  const yScale = useMemo(() => d3.scaleLinear().domain([0, elevMax]).range([graphHeight, 0]), [yTicks]);
 
   const areaGraph = useMemo(() => {
     const areaGenerator = d3.area<DataPoint>()
@@ -54,30 +55,30 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWid
   return (
     <svg width={graphWidth} height="220">
       {/* X-axis line */}
-      <line x1="10" y1="200" x2="290" y2="200" stroke="currentColor" />
+      <line x1="10" y1="200" x2={graphWidth} y2="200" stroke="currentColor" />
 
       {/* Y-axis line */}
       <line x1="10" y1="0" x2="10" y2="200" stroke="currentColor" />
 
       {/* X-axis ticks */}
-      {xTicks.map(({ value, offset }) => (
+      {/* {xTicks.map(({ value, offset }) => (
         <g key={value} transform={`translate(${offset}, 200)`}>
           <line y2="6" stroke="currentColor" />
           <text style={{ fontSize: '10px', textAnchor: 'middle' }} dy="1em">
             {value}
           </text>
         </g>
-      ))}
+      ))} */}
 
       {/* Y-axis ticks */}
-      {yTicks.map(({ value, offset }) => (
+      {/* {yTicks.map(({ value, offset }) => (
         <g key={value} transform={`translate(10, ${offset})`}>
           <line x2="-6" stroke="currentColor" />
           <text style={{ fontSize: '10px', textAnchor: 'end' }} dx="-0.5em" dy="0.35em">
             {value}
           </text>
         </g>
-      ))}
+      ))} */}
 
       <path d={areaGraph} fill='#37FF8B' fillOpacity="0.7" stroke="none" />
 
