@@ -16,9 +16,9 @@ const Root = () => {
   }, [currentUser])
 
   return (
-    <div className="w-screen h-screen bg-black overflow-x-hidden scrollbar scrollbar-track-secondary scrollbar-thumb-tertiary">
+    <div className="w-screen h-screen bg-black overflow-x-hidden overflow-y-hidden ">
       {/* Navbar */}
-      <header className="h-14 bg-secondary flex items-center px-4 mb-4">
+      <header className="h-14 bg-black flex items-center px-4">
         <Link to="/" className="flex items-center">
           <img
             src={images.logo}
@@ -30,7 +30,7 @@ const Root = () => {
         {currentUser ?
           <Button
             text="Sign out"
-            containerStyles="bg-secondary border-2 border-primary mb-2 mt-2 ml-auto"
+            containerStyles="bg-black border-2 border-primary mb-2 mt-2 ml-auto"
             textStyles="white"
             handleClick={() => logOut()}
           />
@@ -47,7 +47,7 @@ const Root = () => {
 
       {/* Main Content */}
 
-      <main className="w-full h-full grid grid-cols-4 gap-4 px-4">
+      <main className="w-full h-fit">
         <Outlet />
       </main>
     </div>

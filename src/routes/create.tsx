@@ -160,7 +160,7 @@ const Create = () => {
 
   return (
     <>
-      <div className="rounded-lg bg-black col-span-3">
+      <div className="relative">
         <Map
           coords={route.coords}
           addCoords={addCoords}
@@ -170,8 +170,45 @@ const Create = () => {
           addElevation={addElevation}
           updateRoutePoints={updateRoutePoints}
         />
+        <div
+          className="flex flex-col rounded-lg text-white w-80 bg-black pt-4 px-4 m-2 absolute top-0 right-0.5"
+          ref={detailsRef}
+        >
+          <Button
+            text="Save route"
+            containerStyles="bg-primary mb-2"
+            textStyles="white"
+            handleClick={() => uploadRoute(route)}
+          />
+          <Button
+            text="Remove last point"
+            containerStyles="bg-black border-2 border-primary mb-2"
+            textStyles="white"
+            handleClick={removeLastCoord}
+          />
+          <Button
+            text="Clear all points"
+            containerStyles="bg-black border-2 border-primary mb-2"
+            textStyles="white"
+            handleClick={clearCoords}
+          />
+          <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+            <p className="text-md text-white/60">Total distance:</p>
+            <p className="text-lg font-semibold">{route.totalDistance} meters</p>
+          </div>
+          <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+            <p className="text-md text-white/60">Total Elevation Gain:</p>
+            <p className="text-lg font-semibold">{route.totalClimb} meters</p>
+          </div>
+          <RouteGraph
+            allElevations={route.allElevations}
+            routePoints={route.points}
+            graphWidth={mapWidth}
+            graphHeight={200}
+          />
+        </div>
       </div>
-      <div
+      {/* <div
         className="flex flex-col rounded-lg text-white"
         ref={detailsRef}
       >
@@ -207,10 +244,7 @@ const Create = () => {
           graphWidth={mapWidth}
           graphHeight={200}
         />
-        {/* <SegmentDetails
-          distance={distance}
-          elevations={elevation} /> */}
-      </div>
+      </div> */}
     </>
   )
 }

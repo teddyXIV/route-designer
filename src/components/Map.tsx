@@ -190,7 +190,7 @@ const Map: React.FC<MapProps> = ({ coords, addCoords, addDistance, totalDist, up
   return (
     <div
       ref={mapContainerRef}
-      className="w-100 rounded-lg h-[36rem]"
+      className="w-full h-[calc(100vh-3.5rem)]"
     />
   );
 };
