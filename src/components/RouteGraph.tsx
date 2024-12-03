@@ -37,7 +37,7 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWid
   const yTicks = useMemo(() => createTicks([0, elevMax], [200, 0]), [elevMax]);
 
   // Scales
-  const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, (graphWidth)]), [routePoints, graphWidth]);
+  const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, (graphWidth - 40)]), [routePoints, graphWidth]);
   const yScale = useMemo(() => d3.scaleLinear().domain([0, elevMax]).range([graphHeight, 0]), [yTicks]);
 
   const areaGraph = useMemo(() => {
@@ -53,7 +53,7 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWid
   }, [chartData, xScale, yScale])
 
   return (
-    <svg width={graphWidth} height="220">
+    <svg width={graphWidth - 40} height="220">
       {/* X-axis line */}
       <line x1="10" y1="200" x2={graphWidth} y2="200" stroke="currentColor" />
 

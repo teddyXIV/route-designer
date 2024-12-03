@@ -160,7 +160,7 @@ const Create = () => {
 
   return (
     <>
-      <div className="relative">
+      <div className="relative h-[calc(100vh-3.5rem)]">
         <Map
           coords={route.coords}
           addCoords={addCoords}
@@ -171,7 +171,12 @@ const Create = () => {
           updateRoutePoints={updateRoutePoints}
         />
         <div
-          className="flex flex-col rounded-lg text-white w-80 bg-black pt-4 px-4 m-2 absolute top-0 right-0.5"
+          className="flex flex-col 
+            rounded-lg 
+            text-white w-80 bg-black 
+            pt-4 px-4 m-2 
+            absolute top-0 right-0 
+            h-[calc(100vh-4.5rem)] max-h-fit"
           ref={detailsRef}
         >
           <Button
@@ -192,59 +197,24 @@ const Create = () => {
             textStyles="white"
             handleClick={clearCoords}
           />
-          <div className="border-secondary border-4 rounded-lg p-2 mb-2">
-            <p className="text-md text-white/60">Total distance:</p>
-            <p className="text-lg font-semibold">{route.totalDistance} meters</p>
+          <div className="overflow-y-scroll overflow-x-hidden scrollbar-thin scrollbar-track-black scrollbar-thumb-secondary">
+            <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+              <p className="text-md text-white/60">Total distance:</p>
+              <p className="text-lg font-semibold">{route.totalDistance} meters</p>
+            </div>
+            <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+              <p className="text-md text-white/60">Total Elevation Gain:</p>
+              <p className="text-lg font-semibold">{route.totalClimb} meters</p>
+            </div>
+            <RouteGraph
+              allElevations={route.allElevations}
+              routePoints={route.points}
+              graphWidth={mapWidth}
+              graphHeight={200}
+            />
           </div>
-          <div className="border-secondary border-4 rounded-lg p-2 mb-2">
-            <p className="text-md text-white/60">Total Elevation Gain:</p>
-            <p className="text-lg font-semibold">{route.totalClimb} meters</p>
-          </div>
-          <RouteGraph
-            allElevations={route.allElevations}
-            routePoints={route.points}
-            graphWidth={mapWidth}
-            graphHeight={200}
-          />
         </div>
       </div>
-      {/* <div
-        className="flex flex-col rounded-lg text-white"
-        ref={detailsRef}
-      >
-        <Button
-          text="Save route"
-          containerStyles="bg-primary mb-2"
-          textStyles="white"
-          handleClick={() => uploadRoute(route)}
-        />
-        <Button
-          text="Remove last point"
-          containerStyles="bg-black border-2 border-primary mb-2"
-          textStyles="white"
-          handleClick={removeLastCoord}
-        />
-        <Button
-          text="Clear all points"
-          containerStyles="bg-black border-2 border-primary mb-2"
-          textStyles="white"
-          handleClick={clearCoords}
-        />
-        <div className="border-secondary border-4 rounded-lg p-2 mb-2">
-          <p className="text-md text-white/60">Total distance:</p>
-          <p className="text-lg font-semibold">{route.totalDistance} meters</p>
-        </div>
-        <div className="border-secondary border-4 rounded-lg p-2 mb-2">
-          <p className="text-md text-white/60">Total Elevation Gain:</p>
-          <p className="text-lg font-semibold">{route.totalClimb} meters</p>
-        </div>
-        <RouteGraph
-          allElevations={route.allElevations}
-          routePoints={route.points}
-          graphWidth={mapWidth}
-          graphHeight={200}
-        />
-      </div> */}
     </>
   )
 }
