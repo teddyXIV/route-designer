@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Map from "../components/Map";
 import Button from "../utilities/Button";
-// import SegmentDetails from "../components/SegmentDetails";
+import SegmentDetails from "../components/SegmentDetails";
 import RouteGraph from "../components/RouteGraph";
 import { saveRoute } from "../../lib/firebase";
 import { LatLng, ElevsObj, Route } from "../types/dataTypes"
@@ -18,6 +18,8 @@ const Create = () => {
   })
 
   const [mapWidth, setMapWidth] = useState<number>(0)
+  const [modalVisible, setModalVisible] = useState<boolean>(true)
+  const [graphSeg, setGraphSeg] = useState<boolean>(true)
 
   const detailsRef: any = useRef()
 
@@ -150,6 +152,18 @@ const Create = () => {
     }))
   }
 
+  //==========================================================================
+  //UI Toggles
+  //==========================================================================
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  }
+
+  const toggleGraphSeg = () => {
+    setGraphSeg(!graphSeg);
+  }
+
 
   //===========================================================================
   // Save route to firestore 
@@ -171,14 +185,65 @@ const Create = () => {
           updateRoutePoints={updateRoutePoints}
         />
         <div
-          className="flex flex-col 
+          className={`flex flex-col 
             rounded-lg 
-            text-white w-80 bg-black 
-            pt-4 px-4 m-2 
-            absolute top-0 right-0 
-            h-[calc(100vh-4.5rem)] max-h-fit"
+            text-white w-72 bg-black/95 
+            px-4 m-2 
+            absolute top-0 left-0 
+            h-[calc(100vh-4.5rem)] max-h-fit
+            transition-opacity duration-400
+            ${modalVisible ? "opacity-100" : "opacity-0"}
+            `}
           ref={detailsRef}
         >
+          <button className="ml-auto mt-2"
+            onClick={toggleModal}
+          >
+            X
+          </button>
+          <h2 className="mb-2 text-2xl font-bold">Route details</h2>
+          <div className="overflow-y-scroll overflow-x-hidden scrollbar-thin scrollbar-track-black scrollbar-thumb-secondary">
+            <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+              <p className="text-md text-white/60">Total distance:</p>
+              <p className="text-lg font-semibold">{route.totalDistance} meters</p>
+            </div>
+            <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+              <p className="text-md text-white/60">Total Elevation Gain:</p>
+              <p className="text-lg font-semibold">{route.totalClimb} meters</p>
+            </div>
+            <Button
+              text="Graph"
+              containerStyles={`${graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 w-24 ml-5 mr-2`}
+              textStyles="white"
+              handleClick={toggleGraphSeg}
+            />
+            <Button
+              text="Segments"
+              containerStyles={`${!graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 w-24`}
+              textStyles="white"
+              handleClick={toggleGraphSeg}
+            />
+            {graphSeg ?
+              <RouteGraph
+                allElevations={route.allElevations}
+                routePoints={route.points}
+                graphWidth={mapWidth}
+                graphHeight={200}
+              />
+              :
+              <SegmentDetails
+                distance={route.distance}
+                elevations={route.elevations} />
+            }
+          </div>
+        </div>
+        <div
+          className="flex flex-col 
+          rounded-lg 
+          text-white w-52 bg-black/95 
+          p-4 m-2 
+          absolute top-0 right-0 
+          h-[calc(100vh-4.5rem)] max-h-fit">
           <Button
             text="Save route"
             containerStyles="bg-primary mb-2"
@@ -193,26 +258,16 @@ const Create = () => {
           />
           <Button
             text="Clear all points"
-            containerStyles="bg-black border-2 border-primary mb-2"
+            containerStyles="bg-black border-2 border-primary"
             textStyles="white"
             handleClick={clearCoords}
           />
-          <div className="overflow-y-scroll overflow-x-hidden scrollbar-thin scrollbar-track-black scrollbar-thumb-secondary">
-            <div className="border-secondary border-4 rounded-lg p-2 mb-2">
-              <p className="text-md text-white/60">Total distance:</p>
-              <p className="text-lg font-semibold">{route.totalDistance} meters</p>
-            </div>
-            <div className="border-secondary border-4 rounded-lg p-2 mb-2">
-              <p className="text-md text-white/60">Total Elevation Gain:</p>
-              <p className="text-lg font-semibold">{route.totalClimb} meters</p>
-            </div>
-            <RouteGraph
-              allElevations={route.allElevations}
-              routePoints={route.points}
-              graphWidth={mapWidth}
-              graphHeight={200}
-            />
-          </div>
+          <Button
+            text="Modal toggle"
+            containerStyles="bg-black border-2 border-primary"
+            textStyles="white"
+            handleClick={toggleModal}
+          />
         </div>
       </div>
     </>
