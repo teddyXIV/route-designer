@@ -8,15 +8,16 @@ interface MapPostProps {
 
 const MapPost: React.FC<MapPostProps> = ({ route, width }) => {
   return (
-    <div className="text-white rounded-lg bg-secondary mb-4">
-      <div className="grid grid-cols-3 w-full text-center">
-        <div>
-          <p>Distance</p>
-          <p>{route.totalDistance}</p>
+    <button className="text-white rounded-lg mb-2 pr-2">
+      <div className="grid grid-cols-3 w-full text-center py-1">
+        <div className="ml-6">
+          <p className="text-md text-white/60">Distance</p>
+          <p className="text-lg font-semibold">{route.totalDistance}m</p>
         </div>
-        <div>
-          <p>Elevation</p>
-          <p>{route.totalClimb}</p>
+        <div />
+        <div className="mr-6">
+          <p className="text-md text-white/60">Elevation</p>
+          <p className="text-lg font-semibold">{route.totalClimb}m</p>
         </div>
       </div>
       <RouteGraph
@@ -25,7 +26,7 @@ const MapPost: React.FC<MapPostProps> = ({ route, width }) => {
         graphWidth={width - 10}
         graphHeight={200} />
       {/* <img src={image} alt="route image" className="w-full h-64 mt-2 rounded-b-lg" /> */}
-    </div>
+    </button>
   )
 }
 
