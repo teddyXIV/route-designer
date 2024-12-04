@@ -5,6 +5,7 @@ import SegmentDetails from "../components/SegmentDetails";
 import RouteGraph from "../components/RouteGraph";
 import { saveRoute } from "../../lib/firebase";
 import { LatLng, ElevsObj, Route } from "../types/dataTypes"
+import icons from "../constants/logos";
 
 const Create = () => {
   const [route, setRoute] = useState<Route>({
@@ -196,10 +197,8 @@ const Create = () => {
             `}
           ref={detailsRef}
         >
-          <button className="ml-auto mt-2"
-            onClick={toggleModal}
-          >
-            X
+          <button className="ml-auto mt-2" onClick={toggleModal}>
+            <img src={icons.close} alt="Close modal" />
           </button>
           <h2 className="mb-2 text-2xl font-bold">Route details</h2>
           <div className="overflow-y-scroll overflow-x-hidden scrollbar-thin scrollbar-track-black scrollbar-thumb-secondary">
