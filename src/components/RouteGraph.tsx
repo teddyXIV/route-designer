@@ -37,7 +37,7 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWid
   const yTicks = useMemo(() => createTicks([0, elevMax], [200, 0]), [elevMax]);
 
   // Scales
-  const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, (graphWidth - 40)]), [routePoints, graphWidth]);
+  const xScale = useMemo(() => d3.scaleLinear().domain([0, routePoints]).range([10, (graphWidth)]), [routePoints, graphWidth]);
   const yScale = useMemo(() => d3.scaleLinear().domain([0, elevMax]).range([graphHeight, 0]), [yTicks]);
 
   const areaGraph = useMemo(() => {
@@ -53,12 +53,20 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWid
   }, [chartData, xScale, yScale])
 
   return (
-    <svg width={graphWidth - 40} height="220">
+    <svg width={graphWidth - 30} height={graphHeight + 10} viewBox={`0 0 ${graphWidth} ${graphHeight + 45}`} className="">
       {/* X-axis line */}
       <line x1="10" y1="200" x2={graphWidth} y2="200" stroke="currentColor" />
 
       {/* Y-axis line */}
       <line x1="10" y1="0" x2="10" y2="200" stroke="currentColor" />
+
+      <text x={(graphWidth - 40) / 2} y={graphHeight + 17} style={{ fontSize: '16px', textAnchor: 'middle' }} fill="white">
+        Distance
+      </text>
+
+      <text x="-100" y="5" transform="rotate(-90)" style={{ fontSize: '16px', textAnchor: 'middle' }} fill="white">
+        Elevation
+      </text>
 
       {/* X-axis ticks */}
       {/* {xTicks.map(({ value, offset }) => (
