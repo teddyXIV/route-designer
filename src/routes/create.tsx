@@ -1,12 +1,20 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Map from "../components/Map";
 import Button from "../utilities/Button";
-// import SegmentDetails from "../components/SegmentDetails";
+import SegmentDetails from "../components/SegmentDetails";
 import RouteGraph from "../components/RouteGraph";
-import { saveRoute } from "../../lib/firebase";
+import { getRoutes, saveRoute } from "../../lib/firebase";
 import { LatLng, ElevsObj, Route } from "../types/dataTypes"
+import MapOptions from "../components/MapOptions";
+import { useAuth } from "../context/AuthContext";
+import MapPost from "../components/MapPost";
+import ModalContainer from "../components/ModalContainer";
+import { Link } from "react-router-dom";
 
 const Create = () => {
+
+  const { currentUser } = useAuth();
+
   const [route, setRoute] = useState<Route>({
     coords: [],
     distance: [],
@@ -17,9 +25,11 @@ const Create = () => {
     totalClimb: 0
   })
 
-  const [mapWidth, setMapWidth] = useState<number>(0)
-
-  const detailsRef: any = useRef()
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [graphSeg, setGraphSeg] = useState<boolean>(true);
+  const [detailsOrList, setDetailsOrList] = useState<boolean>(true);
+  const [allUserRoutes, setAllUserRoutes] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const getTotalClimb = (elevations: number[]) => {
     if (elevations.length < 2) return 0;
@@ -34,21 +44,6 @@ const Create = () => {
     }
     return parseFloat(total.toFixed(3));
   }
-
-  //======================================================================
-  //Testing
-  //======================================================================
-  // useEffect(() => {
-  // console.log("coords", route.coords)
-  // console.log("distance", route.distance)
-  // console.log("totalDistance", route.totalDistance)
-  // console.log("elevations", route.elevations)
-  // console.log("points", route.points)
-  // console.log("allElevations", route.allElevations)
-  // console.log("totalClimb", route.totalClimb)
-
-  // }, [route.elevations])
-
 
   //========================================================================
   // Update allElevations and totalClimb when elevations changes
@@ -65,28 +60,30 @@ const Create = () => {
 
   }, [route.elevations])
 
+  //==============================================================================
+  //Fetches all user routes
+  //==============================================================================
 
-  //=============================================================================
-  // Updates mapWidth when window size changes
-  //=============================================================================
   useEffect(() => {
-    if (detailsRef.current) {
-      setMapWidth(detailsRef.current.offsetWidth)
+    const fetchRoutes = async () => {
+      try {
+        const fetchedRoutes = await getRoutes();
+        setAllUserRoutes(fetchedRoutes);
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false);
+      }
     }
 
-    const handleResize = () => {
-      if (detailsRef.current) {
-        setMapWidth(detailsRef.current.offsetWidth);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [])
+    fetchRoutes();
+  }, [currentUser])
 
 
   //==============================================================================
   // route property update functions
   //==============================================================================
+
   const updateTotalDistance = (newTotal: number) => {
 
     setRoute((prevRoute) => ({
@@ -150,17 +147,88 @@ const Create = () => {
     }))
   }
 
+  const loopIt = () => {
+    if (route.coords.length > 0) {
+      const firstCoord = route.coords[0];
+
+      setRoute((prevRoute) => ({
+        ...prevRoute,
+        coords: [...prevRoute.coords, firstCoord]
+      }))
+    }
+  }
+
+  //=========================================================================
+  //Update entire route object
+  //=========================================================================
+
+  const updateFullRoute = (selectedRoute: Route) => {
+    setRoute(selectedRoute)
+  }
+
+  //==========================================================================
+  //UI Toggles
+  //==========================================================================
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  }
+
+  const toggleGraphSeg = () => {
+    setGraphSeg(!graphSeg);
+  }
+
+  const toggleList = () => {
+    if (!modalVisible) {
+      setModalVisible(true);
+    }
+
+    setDetailsOrList(false);
+  }
+
+  const toggleDetails = () => {
+    if (!modalVisible) {
+      setModalVisible(true)
+    }
+    setDetailsOrList(true);
+  }
+
+  const routePlaceholder = currentUser ?
+    <div className="text-lg font-semibold p-2">No routes saved yet.</div>
+    :
+    <div className="text-lg font-semibold p-2">
+      <Link to="/signin" className="underline text-primary">Sign in</Link> to view and save your routes.
+    </div>
+
+  //==========================================================================
+  //Map through user routes
+  //==========================================================================
+
+  const mapPosts = allUserRoutes.map((route, index) => {
+    return (
+      <div
+        key={index}
+        className="text-white border-b-2 border-secondary">
+        <MapPost
+          route={route}
+          width={310}
+          updateFullRoute={updateFullRoute}
+        />
+      </div>
+    )
+  })
 
   //===========================================================================
   // Save route to firestore 
   //===========================================================================
+
   const uploadRoute = async (routeData: Route) => {
     saveRoute(routeData)
   }
 
   return (
     <>
-      <div className="rounded-lg bg-black col-span-3">
+      <div className="relative h-[calc(100vh-3.5rem)]">
         <Map
           coords={route.coords}
           addCoords={addCoords}
@@ -170,46 +238,86 @@ const Create = () => {
           addElevation={addElevation}
           updateRoutePoints={updateRoutePoints}
         />
-      </div>
-      <div
-        className="flex flex-col rounded-lg text-white"
-        ref={detailsRef}
-      >
-        <Button
-          text="Save route"
-          containerStyles="bg-primary mb-2"
-          textStyles="white"
-          handleClick={() => uploadRoute(route)}
-        />
-        <Button
-          text="Remove last point"
-          containerStyles="bg-black border-2 border-primary mb-2"
-          textStyles="white"
-          handleClick={removeLastCoord}
-        />
-        <Button
-          text="Clear all points"
-          containerStyles="bg-black border-2 border-primary mb-2"
-          textStyles="white"
-          handleClick={clearCoords}
-        />
-        <div className="border-secondary border-4 rounded-lg p-2 mb-2">
-          <p className="text-md text-white/60">Total distance:</p>
-          <p className="text-lg font-semibold">{route.totalDistance} meters</p>
+        <div className="absolute top-0 left-0 ">
+          <MapOptions
+            showDetails={toggleDetails}
+            showList={toggleList}
+            detailsOrList={detailsOrList}
+            modalVisible={modalVisible}
+          />
+          {detailsOrList ?
+            <ModalContainer modalVisible={modalVisible} toggleModal={toggleModal} header="Route details">
+              <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+                <p className="text-md text-white/60">Total distance:</p>
+                <p className="text-lg font-semibold">{route.totalDistance} meters</p>
+              </div>
+              <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+                <p className="text-md text-white/60">Total Elevation Gain:</p>
+                <p className="text-lg font-semibold">{route.totalClimb} meters</p>
+              </div>
+              <Button
+                text="Graph"
+                containerStyles={`${graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 w-24 ml-5 mr-2`}
+                textStyles="white"
+                handleClick={toggleGraphSeg}
+              />
+              <Button
+                text="Segments"
+                containerStyles={`${!graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 w-24`}
+                textStyles="white"
+                handleClick={toggleGraphSeg}
+              />
+              {graphSeg ?
+                <RouteGraph
+                  allElevations={route.allElevations}
+                  routePoints={route.points}
+                  graphWidth={310}
+                  graphHeight={200}
+                />
+                :
+                <SegmentDetails
+                  distance={route.distance}
+                  elevations={route.elevations} />
+              }
+            </ModalContainer>
+            :
+            <ModalContainer modalVisible={modalVisible} toggleModal={toggleModal} header="Your routes">
+              {!loading && allUserRoutes.length > 0 ? mapPosts : routePlaceholder}
+            </ModalContainer>
+          }
         </div>
-        <div className="border-secondary border-4 rounded-lg p-2 mb-2">
-          <p className="text-md text-white/60">Total Elevation Gain:</p>
-          <p className="text-lg font-semibold">{route.totalClimb} meters</p>
+        <div
+          className="flex flex-col 
+          rounded-lg 
+          text-white w-52 bg-black/95 
+          p-2 m-2 
+          absolute top-0 right-0 
+          h-fit">
+          <Button
+            text="Save route"
+            containerStyles="bg-primary mb-2"
+            textStyles="white"
+            handleClick={() => uploadRoute(route)}
+          />
+          <Button
+            text="Remove last point"
+            containerStyles="bg-black border-2 border-primary mb-2"
+            textStyles="white"
+            handleClick={removeLastCoord}
+          />
+          <Button
+            text="Clear all points"
+            containerStyles="bg-black border-2 border-primary mb-2"
+            textStyles="white"
+            handleClick={clearCoords}
+          />
+          <Button
+            text="Loop it"
+            containerStyles="bg-primary"
+            textStyles="white"
+            handleClick={loopIt}
+          />
         </div>
-        <RouteGraph
-          allElevations={route.allElevations}
-          routePoints={route.points}
-          graphWidth={mapWidth}
-          graphHeight={200}
-        />
-        {/* <SegmentDetails
-          distance={distance}
-          elevations={elevation} /> */}
       </div>
     </>
   )

@@ -58,17 +58,17 @@ const Home = () => {
     )
   })
 
-  const mapPosts = routes.map((route, index) => {
-    return (
-      <div
-        key={index}
-        className="text-white">
-        <MapPost
-          route={route}
-          width={listWidth} />
-      </div>
-    )
-  })
+  // const mapPosts = routes.map((route, index) => {
+  //   return (
+  //     <div
+  //       key={index}
+  //       className="text-white">
+  //       <MapPost
+  //         route={route}
+  //         width={listWidth} />
+  //     </div>
+  //   )
+  // })
 
   return (
     <>
@@ -79,7 +79,7 @@ const Home = () => {
       </div>
       <div className="rounded-lg bg-black col-span-2"
         ref={routeListRef}>
-        {!loading && routes.length > 0 ? mapPosts : dummyPosts}
+        {dummyPosts}
       </div>
       <div className="rounded-lg bg-secondary p-4 text-white">
         <button className="rounded-lg justify-center items-center px-2 py-1 bg-primary ml-auto">
