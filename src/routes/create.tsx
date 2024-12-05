@@ -25,7 +25,6 @@ const Create = () => {
     totalClimb: 0
   })
 
-  // const [mapWidth, setMapWidth] = useState<number>(0);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [graphSeg, setGraphSeg] = useState<boolean>(true);
   const [detailsOrList, setDetailsOrList] = useState<boolean>(true);
@@ -45,21 +44,6 @@ const Create = () => {
     }
     return parseFloat(total.toFixed(3));
   }
-
-  //======================================================================
-  //Testing
-  //======================================================================
-  // useEffect(() => {
-  // console.log("coords", route.coords)
-  // console.log("distance", route.distance)
-  // console.log("totalDistance", route.totalDistance)
-  // console.log("elevations", route.elevations)
-  // console.log("points", route.points)
-  // console.log("allElevations", route.allElevations)
-  // console.log("totalClimb", route.totalClimb)
-
-  // }, [route.elevations])
-
 
   //========================================================================
   // Update allElevations and totalClimb when elevations changes
@@ -99,6 +83,7 @@ const Create = () => {
   //==============================================================================
   // route property update functions
   //==============================================================================
+
   const updateTotalDistance = (newTotal: number) => {
 
     setRoute((prevRoute) => ({
@@ -236,6 +221,7 @@ const Create = () => {
   //===========================================================================
   // Save route to firestore 
   //===========================================================================
+
   const uploadRoute = async (routeData: Route) => {
     saveRoute(routeData)
   }

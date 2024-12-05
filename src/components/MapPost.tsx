@@ -28,7 +28,6 @@ const MapPost: React.FC<MapPostProps> = ({ route, width, updateFullRoute }) => {
         routePoints={route.points}
         graphWidth={width - 10}
         graphHeight={200} />
-      {/* <img src={image} alt="route image" className="w-full h-64 mt-2 rounded-b-lg" /> */}
     </button>
   )
 }
