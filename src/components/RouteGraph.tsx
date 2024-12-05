@@ -33,7 +33,7 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWid
 
 
   // Memoized X-axis and Y-axis ticks
-  const xTicks = useMemo(() => createTicks([0, 100], [10, (graphWidth)]), [graphWidth]);
+  // const xTicks = useMemo(() => createTicks([0, 100], [10, (graphWidth)]), [graphWidth]);
   const yTicks = useMemo(() => createTicks([0, elevMax], [200, 0]), [elevMax]);
 
   // Scales

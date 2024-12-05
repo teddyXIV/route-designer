@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { signIn } from '../../lib/firebase';
 import { Link, useNavigate } from 'react-router-dom';
+import images from "../constants/logos";
 
 const SignIn = () => {
   const [email, setEmail] = useState<string>("");
@@ -22,7 +23,17 @@ const SignIn = () => {
   };
 
   return (
-    <div className="w-screen h-screen bg-black">
+    <div className="w-screen h-screen bg-black overflow-x-hidden overflow-y-hidden">
+      <header className="h-14 bg-black flex items-center px-4">
+        <Link to="/" className="flex items-center">
+          <img
+            src={images.logo}
+            alt="RouteDesigner logo"
+            className="w-10 h-auto rounded-full"
+          />
+          <h1 className="text-white text-2xl font-bold px-2">RouteDesigner</h1>
+        </Link>
+      </header>
       <div className="bg-black text-white h-screen flex flex-col justify-center items-center">
         <h1 className="text-primary text-4xl font-bold mb-4">Sign in</h1>
         <form onSubmit={handleSubmit}>

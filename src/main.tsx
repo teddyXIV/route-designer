@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Root from './routes/root.tsx';
 import ErrorPage from "./error-page.tsx";
-import Home from './routes/home.tsx';
+// import Home from './routes/home.tsx';
 import Create from './routes/create.tsx';
 import SignUp from './routes/signUp.tsx'
 import SignIn from './routes/signIn.tsx'
@@ -27,16 +27,18 @@ const router = createBrowserRouter([
         path: "create/",
         element: <Create />
       },
-      {
-        path: "signup/",
-        element: <SignUp />
-      },
-      {
-        path: "signin/",
-        element: <SignIn />
-      }
     ]
   },
+  {
+    path: "signup/",
+    element: <SignUp />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "signin/",
+    element: <SignIn />,
+    errorElement: <ErrorPage />
+  }
 ])
 
 createRoot(document.getElementById('root')!).render(

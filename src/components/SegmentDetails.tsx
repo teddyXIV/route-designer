@@ -5,7 +5,7 @@ interface SegmentProps {
   elevations: ElevsObj[];
 }
 
-const SegmentDetails: React.FC<SegmentProps> = ({ distance, elevations }) => {
+const SegmentDetails: React.FC<SegmentProps> = ({ distance }) => {
 
   // console.log("seg details elevations: ", elevations)
 
