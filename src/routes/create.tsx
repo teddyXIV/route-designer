@@ -181,6 +181,14 @@ const Create = () => {
     }))
   }
 
+  //=========================================================================
+  //Update entire route object
+  //=========================================================================
+
+  const updateFullRoute = (selectedRoute: Route) => {
+    setRoute(selectedRoute)
+  }
+
   //==========================================================================
   //UI Toggles
   //==========================================================================
@@ -219,7 +227,8 @@ const Create = () => {
         className="text-white border-b-2 border-secondary">
         <MapPost
           route={route}
-          width={mapWidth} />
+          width={mapWidth}
+          updateFullRoute={updateFullRoute} />
       </div>
     )
   })
@@ -318,7 +327,7 @@ const Create = () => {
               </button>
               <h2 className="mb-2 text-2xl font-bold">Your routes</h2>
               <div className="overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-track-black scrollbar-thumb-secondary">
-                {!loading && allUserRoutes.length > 0 ? mapPosts : <div>No routes saved yet</div>}
+                {!loading && allUserRoutes.length > 0 ? mapPosts : <div className="text-lg font-semibold p-2">No routes saved yet</div>}
               </div>
             </div>
           }

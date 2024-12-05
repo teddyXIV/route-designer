@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { signUp } from "../../lib/firebase.ts";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [email, setEmail] = useState<string>("");
@@ -67,6 +67,12 @@ const SignUp = () => {
             Sign in
           </button>
         </form>
+        <Link
+          to="/signin"
+          className="underline text-primary mt-2"
+        >
+          Already have an account? Sign in here!
+        </Link>
       </div>
     </div>
   )

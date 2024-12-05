@@ -4,11 +4,14 @@ import type { Route } from "../types/dataTypes";
 interface MapPostProps {
   route: Route
   width: number
+  updateFullRoute: (selectedRoute: Route) => void
 }
 
-const MapPost: React.FC<MapPostProps> = ({ route, width }) => {
+const MapPost: React.FC<MapPostProps> = ({ route, width, updateFullRoute }) => {
   return (
-    <button className="text-white rounded-lg mb-2 pr-2">
+    <button className="text-white rounded-lg mb-2 pr-2"
+      onClick={() => updateFullRoute(route)}
+    >
       <div className="grid grid-cols-3 w-full text-center py-1">
         <div className="ml-6">
           <p className="text-md text-white/60">Distance</p>
