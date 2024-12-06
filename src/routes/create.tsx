@@ -153,8 +153,11 @@ const Create = () => {
   }
 
   const loopIt = () => {
-    if (route.coords.length > 0) {
-      const firstCoord = route.coords[0];
+    const coordLength = route.coords.length
+    const firstCoord = route.coords[0];
+    const lastCoord = route.coords[coordLength - 1]
+
+    if (coordLength > 0 && firstCoord !== lastCoord) {
 
       setRoute((prevRoute) => ({
         ...prevRoute,
@@ -211,7 +214,7 @@ const Create = () => {
 
   const mapPosts = allUserRoutes.map((route) => {
     return (
-      <button className="text-white rounded-lg hover:bg-secondary"
+      <button className={`text-white rounded-lg hover:bg-secondary ${routeId === route.id ? "border-2 border-primary" : ""}`}
         key={route.id}
         onClick={() => {
           updateFullRoute(route.route)
@@ -330,12 +333,13 @@ const Create = () => {
             textStyles="white"
             handleClick={clearCoords}
           />
-          <Button
-            text="Loop it"
-            containerStyles="bg-primary"
-            textStyles="white"
-            handleClick={loopIt}
-          />
+          {route.coords.length > 2 && route.coords[0] !== route.coords[route.coords.length - 1] ?
+            <Button
+              text="Loop it"
+              containerStyles="bg-primary"
+              textStyles="white"
+              handleClick={loopIt}
+            /> : null}
           {savedMapView ?
             <>
               <Button
