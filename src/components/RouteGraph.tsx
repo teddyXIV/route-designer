@@ -60,7 +60,7 @@ const RouteGraph: React.FC<GraphProps> = ({ allElevations, routePoints, graphWid
       {/* Y-axis line */}
       <line x1="10" y1="0" x2="10" y2="200" stroke="currentColor" />
 
-      <text x={(graphWidth - 40) / 2} y={graphHeight + 17} style={{ fontSize: '16px', textAnchor: 'middle' }} fill="white">
+      <text x={(graphWidth) / 2} y={graphHeight + 17} style={{ fontSize: '16px', textAnchor: 'middle' }} fill="white">
         Distance
       </text>
 
