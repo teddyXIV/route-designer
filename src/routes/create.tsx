@@ -3,7 +3,7 @@ import Map from "../components/Map";
 import Button from "../utilities/Button";
 import SegmentDetails from "../components/SegmentDetails";
 import RouteGraph from "../components/RouteGraph";
-import { getRoutes, saveRoute } from "../../lib/firebase";
+import { getRoutes, createRoute, updateRoute } from "../../lib/firebase";
 import { LatLng, ElevsObj, Route } from "../types/dataTypes"
 import MapOptions from "../components/MapOptions";
 import { useAuth } from "../context/AuthContext";
@@ -82,7 +82,7 @@ const Create = () => {
     }
 
     fetchRoutes();
-  }, [currentUser])
+  }, [currentUser, loading])
 
 
   //==============================================================================
@@ -229,17 +229,19 @@ const Create = () => {
   })
 
   //===========================================================================
-  // Save route to firestore 
+  // Save/update route in firestore 
   //===========================================================================
 
   const uploadRoute = async (routeData: Route) => {
     if (route.coords.length > 1) {
       if (routeId == "") {
-        saveRoute(routeData)
+        createRoute(routeData)
       } else {
         console.log("Saving existing route")
+        updateRoute(routeId, routeData)
         //function for updating an existing route
       }
+      setLoading(true);
     }
   }
 

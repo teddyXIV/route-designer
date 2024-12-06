@@ -10,7 +10,7 @@ import {
   setPersistence,
   browserLocalPersistence
 } from "firebase/auth";
-import { getFirestore, collection, doc, setDoc, query, where, getDocs } from "firebase/firestore";
+import { getFirestore, collection, doc, setDoc, query, where, getDocs, updateDoc } from "firebase/firestore";
 // import { getAnalytics } from "firebase/analytics";
 import { Route } from "../src/types/dataTypes"
 // TODO: Add SDKs for Firebase products that you want to use
@@ -105,7 +105,7 @@ const signUp = async (email: string, password: string): Promise<User | null> => 
 //Save new route
 //==========================================================================================
 
-const saveRoute = async (route: Route) => {
+const createRoute = async (route: Route) => {
 
   console.log(route);
 
@@ -134,6 +134,36 @@ const saveRoute = async (route: Route) => {
     return newRouteRef.id;
   } catch (error) {
     console.error("error uploading route data: ", error);
+    throw error;
+  }
+}
+
+//=============================================================================
+//Update route
+//=============================================================================
+
+const updateRoute = async (routeId: string, updatedRoute: Route) => {
+  console.log("in update route function")
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error("User not authenticatee");
+    }
+
+    const routeDocRef = doc(db, "routes", routeId);
+
+    const updatedRouteData = {
+      ...updatedRoute,
+      lastUpdatedAt: new Date()
+    };
+
+    await updateDoc(routeDocRef, updatedRouteData)
+
+    console.log("Route updated: ", routeId);
+  } catch (error) {
+    console.error("error updating route data: ", error);
     throw error;
   }
 }
@@ -172,4 +202,4 @@ const getRoutes = async () => {
   }
 }
 
-export { db, auth, signIn, signUp, logOut, saveRoute, getRoutes };
+export { db, auth, signIn, signUp, logOut, createRoute, getRoutes, updateRoute };
