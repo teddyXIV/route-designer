@@ -237,6 +237,7 @@ const Create = () => {
       if (routeId == "") {
         saveRoute(routeData)
       } else {
+        console.log("Saving existing route")
         //function for updating an existing route
       }
     }
