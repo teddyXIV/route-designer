@@ -159,7 +159,8 @@ const getRoutes = async () => {
     const userRoutesSnap = await getDocs(routesQuery);
 
     const routes = userRoutesSnap.docs.map((doc) => ({
-      ...doc.data()
+      id: doc.id,
+      route: doc.data()
     }));
 
     console.log(routes);

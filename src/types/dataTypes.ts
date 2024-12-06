@@ -17,4 +17,9 @@ interface Route {
   totalClimb: number;
 }
 
-export type { LatLng, ElevsObj, Route }
+interface FetchedRoute {
+  id: string;
+  route: Route
+}
+
+export type { LatLng, ElevsObj, Route, FetchedRoute }

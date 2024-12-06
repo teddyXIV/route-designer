@@ -15,7 +15,7 @@ const Create = () => {
 
   const { currentUser } = useAuth();
 
-  const [route, setRoute] = useState<Route>({
+  const emptyRoute = {
     coords: [],
     distance: [],
     totalDistance: 0,
@@ -23,13 +23,18 @@ const Create = () => {
     points: 0,
     allElevations: [],
     totalClimb: 0
-  })
+  }
+
+  const [route, setRoute] = useState<Route>(emptyRoute)
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [graphSeg, setGraphSeg] = useState<boolean>(true);
   const [detailsOrList, setDetailsOrList] = useState<boolean>(true);
   const [allUserRoutes, setAllUserRoutes] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [savedMapView, setSavedMapView] = useState<boolean>(false);
+  const [savedRoute, setSavedRoute] = useState<Route>(emptyRoute);
+  const [routeId, setRouteId] = useState<string>("");
 
   const getTotalClimb = (elevations: number[]) => {
     if (elevations.length < 2) return 0;
@@ -204,17 +209,22 @@ const Create = () => {
   //Map through user routes
   //==========================================================================
 
-  const mapPosts = allUserRoutes.map((route, index) => {
+  const mapPosts = allUserRoutes.map((route) => {
     return (
-      <div
-        key={index}
-        className="text-white border-b-2 border-secondary">
+      <button className="text-white rounded-lg hover:bg-secondary"
+        key={route.id}
+        onClick={() => {
+          updateFullRoute(route.route)
+          setSavedMapView(true)
+          setSavedRoute(route.route)
+          setRouteId(route.id)
+        }}
+      >
         <MapPost
-          route={route}
+          route={route.route}
           width={310}
-          updateFullRoute={updateFullRoute}
         />
-      </div>
+      </button>
     )
   })
 
@@ -223,7 +233,14 @@ const Create = () => {
   //===========================================================================
 
   const uploadRoute = async (routeData: Route) => {
-    saveRoute(routeData)
+    if (route.coords.length > 1) {
+      if (routeId == "") {
+        saveRoute(routeData)
+      } else {
+        console.log("Saving existing route")
+        //function for updating an existing route
+      }
+    }
   }
 
   return (
@@ -294,7 +311,7 @@ const Create = () => {
           absolute top-0 right-0 
           h-fit">
           <Button
-            text="Save route"
+            text={`${savedMapView ? "Update" : "Save"} route`}
             containerStyles="bg-primary mb-2"
             textStyles="white"
             handleClick={() => uploadRoute(route)}
@@ -317,6 +334,29 @@ const Create = () => {
             textStyles="white"
             handleClick={loopIt}
           />
+          {savedMapView ?
+            <>
+              <Button
+                text="Undo changes"
+                containerStyles="bg-primary mt-2"
+                textStyles="white"
+                handleClick={() => updateFullRoute(savedRoute)}
+              />
+              <Button
+                text="New route"
+                containerStyles="bg-primary mt-2"
+                textStyles="white"
+                handleClick={() => {
+                  updateFullRoute(emptyRoute);
+                  setSavedRoute(emptyRoute);
+                  setSavedMapView(false);
+                  setRouteId("");
+                }}
+              />
+            </>
+            :
+            null
+          }
         </div>
       </div>
     </>
