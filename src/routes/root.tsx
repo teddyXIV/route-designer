@@ -3,21 +3,14 @@ import { Outlet, Link } from "react-router-dom";
 import Button from '../utilities/Button.tsx';
 import { logOut } from '../../lib/firebase.ts';
 import { useAuth } from '../context/AuthContext.tsx';
-import { useEffect } from 'react';
 
 const Root = () => {
   // const [user, setUser] = useState<boolean>(false)
 
   const { currentUser } = useAuth();
 
-  useEffect(() => {
-    console.log(currentUser)
-
-  }, [currentUser])
-
   return (
     <div className="w-screen h-screen bg-black overflow-x-hidden overflow-y-hidden ">
-      {/* Navbar */}
       <header className="h-14 bg-black flex items-center px-4">
         <Link to="/" className="flex items-center">
           <img
@@ -44,8 +37,6 @@ const Root = () => {
             </Link>
           </button>}
       </header>
-
-      {/* Main Content */}
 
       <main className="w-full h-fit">
         <Outlet />

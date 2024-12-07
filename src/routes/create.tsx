@@ -5,11 +5,12 @@ import SegmentDetails from "../components/SegmentDetails";
 import RouteGraph from "../components/RouteGraph";
 import { getRoutes, createRoute, updateRoute } from "../../lib/firebase";
 import { LatLng, ElevsObj, Route } from "../types/dataTypes"
-import MapOptions from "../components/MapOptions";
+import ModalView from "../components/ModalView";
 import { useAuth } from "../context/AuthContext";
 import MapPost from "../components/MapPost";
 import ModalContainer from "../components/ModalContainer";
 import { Link } from "react-router-dom";
+import RouteEdit from "../components/RouteEdit";
 
 const Create = () => {
 
@@ -261,31 +262,38 @@ const Create = () => {
           updateRoutePoints={updateRoutePoints}
         />
         <div className="absolute top-0 left-0 ">
-          <MapOptions
-            showDetails={toggleDetails}
-            showList={toggleList}
-            detailsOrList={detailsOrList}
-            modalVisible={modalVisible}
-          />
+          <div className="flex flex-row">
+            <ModalView
+              showDetails={toggleDetails}
+              showList={toggleList}
+              detailsOrList={detailsOrList}
+              modalVisible={modalVisible}
+            />
+            <RouteEdit
+              removeLastCoord={removeLastCoord}
+              clearCoords={clearCoords}
+              loopIt={loopIt}
+              coordList={route.coords} />
+          </div>
           {detailsOrList ?
             <ModalContainer modalVisible={modalVisible} toggleModal={toggleModal} header="Route details">
-              <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+              <div className="border-secondary border-4 rounded-lg p-2 mb-2 mr-2">
                 <p className="text-md text-white/60">Total distance:</p>
                 <p className="text-lg font-semibold">{route.totalDistance} meters</p>
               </div>
-              <div className="border-secondary border-4 rounded-lg p-2 mb-2">
+              <div className="border-secondary border-4 rounded-lg p-2 mb-2 mr-2">
                 <p className="text-md text-white/60">Total Elevation Gain:</p>
                 <p className="text-lg font-semibold">{route.totalClimb} meters</p>
               </div>
               <Button
-                text="Graph"
-                containerStyles={`${graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 w-24 ml-5 mr-2`}
+                text="Elev. graph"
+                containerStyles={`${graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 mr-2 w-32`}
                 textStyles="white"
                 handleClick={toggleGraphSeg}
               />
               <Button
                 text="Segments"
-                containerStyles={`${!graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 w-24`}
+                containerStyles={`${!graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 w-32`}
                 textStyles="white"
                 handleClick={toggleGraphSeg}
               />
@@ -311,35 +319,16 @@ const Create = () => {
         <div
           className="flex flex-col 
           rounded-lg 
-          text-white w-52 bg-black/95 
+          text-white w-40 bg-black/95 
           p-2 m-2 
           absolute top-0 right-0 
           h-fit">
           <Button
             text={`${savedMapView ? "Update" : "Save"} route`}
-            containerStyles="bg-primary mb-2"
+            containerStyles="bg-primary"
             textStyles="white"
             handleClick={() => uploadRoute(route)}
           />
-          <Button
-            text="Remove last point"
-            containerStyles="bg-black border-2 border-primary mb-2"
-            textStyles="white"
-            handleClick={removeLastCoord}
-          />
-          <Button
-            text="Clear all points"
-            containerStyles="bg-black border-2 border-primary mb-2"
-            textStyles="white"
-            handleClick={clearCoords}
-          />
-          {route.coords.length > 2 && route.coords[0] !== route.coords[route.coords.length - 1] ?
-            <Button
-              text="Loop it"
-              containerStyles="bg-primary"
-              textStyles="white"
-              handleClick={loopIt}
-            /> : null}
           {savedMapView ?
             <>
               <Button

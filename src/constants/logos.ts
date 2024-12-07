@@ -7,6 +7,9 @@ import greenMap from "../../assets/green-map-info.svg"
 import blackList from "../../assets/black-list.svg"
 import whiteList from "../../assets/white-list.svg"
 import greenList from "../../assets/green-list.svg"
+import whiteMinusPin from "../../assets/minus-pin-white.svg"
+import whiteNoPin from "../../assets/no-pins-white.svg"
+import whitePlusPin from "../../assets/plus-pin-white.svg"
 
 export default {
   logo,
@@ -17,5 +20,8 @@ export default {
   greenMap,
   blackList,
   whiteList,
-  greenList
+  greenList,
+  whiteMinusPin,
+  whiteNoPin,
+  whitePlusPin
 }
