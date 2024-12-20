@@ -5,9 +5,10 @@ interface ContainerProps {
   modalVisible: boolean;
   toggleModal: () => void;
   header: string;
+  style?: string
 }
 
-const ModalContainer: React.FC<ContainerProps> = ({ children, modalVisible, toggleModal, header }) => {
+const ModalContainer: React.FC<ContainerProps> = ({ children, modalVisible, toggleModal, header, style }) => {
   return (
     <div
       className={`flex flex-col 
@@ -16,6 +17,7 @@ const ModalContainer: React.FC<ContainerProps> = ({ children, modalVisible, togg
       text-white w-80 bg-black/95 
         pl-4 pb-2 m-2 
         transition-opacity duration-400
+        ${style}
         ${modalVisible ? "opacity-100" : "opacity-0"}`}
     >
       <button className="ml-auto mt-2 mr-2" onClick={toggleModal}>

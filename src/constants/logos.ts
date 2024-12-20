@@ -10,6 +10,8 @@ import greenList from "../../assets/green-list.svg"
 import whiteMinusPin from "../../assets/minus-pin-white.svg"
 import whiteNoPin from "../../assets/no-pins-white.svg"
 import whitePlusPin from "../../assets/plus-pin-white.svg"
+import userIcon from "../../assets/user-icon.svg"
+import menu from "../../assets/menu.svg"
 
 export default {
   logo,
@@ -23,5 +25,7 @@ export default {
   greenList,
   whiteMinusPin,
   whiteNoPin,
-  whitePlusPin
+  whitePlusPin,
+  userIcon,
+  menu
 }
