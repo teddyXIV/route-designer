@@ -3,18 +3,18 @@ import Map from "../components/Map";
 import Button from "../utilities/Button";
 import SegmentDetails from "../components/SegmentDetails";
 import RouteGraph from "../components/RouteGraph";
-import { getRoutes, createRoute, updateRoute } from "../../lib/firebase";
+// import { getRoutes, createRoute, updateRoute } from "../../lib/firebase";
 import { LatLng, ElevsObj, Route } from "../types/dataTypes"
 import ModalView from "../components/ModalView";
-import { useAuth } from "../context/AuthContext";
-import MapPost from "../components/MapPost";
+// import { useAuth } from "../context/AuthContext";
+// import MapPost from "../components/MapPost";
 import ModalContainer from "../components/ModalContainer";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import RouteEdit from "../components/RouteEdit";
 
 const Create = () => {
 
-  const { currentUser } = useAuth();
+  // const { currentUser } = useAuth();
 
   const emptyRoute = {
     coords: [],
@@ -31,11 +31,11 @@ const Create = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [graphSeg, setGraphSeg] = useState<boolean>(true);
   const [detailsOrList, setDetailsOrList] = useState<boolean>(true);
-  const [allUserRoutes, setAllUserRoutes] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [savedMapView, setSavedMapView] = useState<boolean>(false);
-  const [savedRoute, setSavedRoute] = useState<Route>(emptyRoute);
-  const [routeId, setRouteId] = useState<string>("");
+  // const [allUserRoutes, setAllUserRoutes] = useState<any[]>([]);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [savedMapView, setSavedMapView] = useState<boolean>(false);
+  // const [savedRoute, setSavedRoute] = useState<Route>(emptyRoute);
+  // const [routeId, setRouteId] = useState<string>("");
 
   const getTotalClimb = (elevations: number[]) => {
     if (elevations.length < 2) return 0;
@@ -70,20 +70,20 @@ const Create = () => {
   //Fetches all user routes
   //==============================================================================
 
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        const fetchedRoutes = await getRoutes();
-        setAllUserRoutes(fetchedRoutes);
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false);
-      }
-    }
+  // useEffect(() => {
+  //   const fetchRoutes = async () => {
+  //     try {
+  //       const fetchedRoutes = await getRoutes();
+  //       setAllUserRoutes(fetchedRoutes);
+  //     } catch (err) {
+  //       console.error(err)
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
 
-    fetchRoutes();
-  }, [currentUser, loading])
+  //   fetchRoutes();
+  // }, [currentUser, loading])
 
 
   //==============================================================================
@@ -171,9 +171,9 @@ const Create = () => {
   //Update entire route object
   //=========================================================================
 
-  const updateFullRoute = (selectedRoute: Route) => {
-    setRoute(selectedRoute)
-  }
+  // const updateFullRoute = (selectedRoute: Route) => {
+  //   setRoute(selectedRoute)
+  // }
 
   //==========================================================================
   //UI Toggles
@@ -187,13 +187,13 @@ const Create = () => {
     setGraphSeg(!graphSeg);
   }
 
-  const toggleList = () => {
-    if (!modalVisible) {
-      setModalVisible(true);
-    }
+  // const toggleList = () => {
+  //   if (!modalVisible) {
+  //     setModalVisible(true);
+  //   }
 
-    setDetailsOrList(false);
-  }
+  //   setDetailsOrList(false);
+  // }
 
   const toggleDetails = () => {
     if (!modalVisible) {
@@ -202,52 +202,52 @@ const Create = () => {
     setDetailsOrList(true);
   }
 
-  const routePlaceholder = currentUser ?
-    <div className="text-lg font-semibold p-2">No routes saved yet.</div>
-    :
-    <div className="text-lg font-semibold p-2">
-      <Link to="/signin" className="underline text-primary">Sign in</Link> to view and save your routes.
-    </div>
+  // const routePlaceholder = currentUser ?
+  //   <div className="text-lg font-semibold p-2">No routes saved yet.</div>
+  //   :
+  //   <div className="text-lg font-semibold p-2">
+  //     <Link to="/signin" className="underline text-primary">Sign in</Link> to view and save your routes.
+  //   </div>
 
   //==========================================================================
   //Map through user routes
   //==========================================================================
 
-  const mapPosts = allUserRoutes.map((route) => {
-    return (
-      <button className={`text-white rounded-lg hover:bg-secondary ${routeId === route.id ? "border-2 border-primary" : ""}`}
-        key={route.id}
-        onClick={() => {
-          updateFullRoute(route.route)
-          setSavedMapView(true)
-          setSavedRoute(route.route)
-          setRouteId(route.id)
-        }}
-      >
-        <MapPost
-          route={route.route}
-          width={310}
-        />
-      </button>
-    )
-  })
+  // const mapPosts = allUserRoutes.map((route) => {
+  //   return (
+  //     <button className={`text-white rounded-lg hover:bg-secondary ${routeId === route.id ? "border-2 border-primary" : ""}`}
+  //       key={route.id}
+  //       onClick={() => {
+  //         updateFullRoute(route.route)
+  //         setSavedMapView(true)
+  //         setSavedRoute(route.route)
+  //         setRouteId(route.id)
+  //       }}
+  //     >
+  //       <MapPost
+  //         route={route.route}
+  //         width={310}
+  //       />
+  //     </button>
+  //   )
+  // })
 
   //===========================================================================
   // Save/update route in firestore 
   //===========================================================================
 
-  const uploadRoute = async (routeData: Route) => {
-    if (route.coords.length > 1) {
-      if (routeId == "") {
-        createRoute(routeData)
-      } else {
-        console.log("Saving existing route")
-        updateRoute(routeId, routeData)
-        //function for updating an existing route
-      }
-      setLoading(true);
-    }
-  }
+  // const uploadRoute = async (routeData: Route) => {
+  //   if (route.coords.length > 1) {
+  //     if (routeId == "") {
+  //       createRoute(routeData)
+  //     } else {
+  //       console.log("Saving existing route")
+  //       updateRoute(routeId, routeData)
+  //       //function for updating an existing route
+  //     }
+  //     setLoading(true);
+  //   }
+  // }
 
   return (
     <>
@@ -265,7 +265,6 @@ const Create = () => {
           <div className="flex flex-row">
             <ModalView
               showDetails={toggleDetails}
-              showList={toggleList}
               detailsOrList={detailsOrList}
               modalVisible={modalVisible}
             />
@@ -275,84 +274,43 @@ const Create = () => {
               loopIt={loopIt}
               coordList={route.coords} />
           </div>
-          {detailsOrList ?
-            <ModalContainer modalVisible={modalVisible} toggleModal={toggleModal} header="Route details">
-              <div className="border-secondary border-4 rounded-lg p-2 mb-2 mr-2">
-                <p className="text-md text-white/60">Total distance:</p>
-                <p className="text-lg font-semibold">{route.totalDistance} meters</p>
-              </div>
-              <div className="border-secondary border-4 rounded-lg p-2 mb-2 mr-2">
-                <p className="text-md text-white/60">Total Elevation Gain:</p>
-                <p className="text-lg font-semibold">{route.totalClimb} meters</p>
-              </div>
-              <Button
-                text="Elev. graph"
-                containerStyles={`${graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 mr-2 w-32`}
-                textStyles="white"
-                handleClick={toggleGraphSeg}
+
+          <ModalContainer modalVisible={modalVisible} toggleModal={toggleModal} header="Route details">
+            <div className="border-secondary border-4 rounded-lg p-2 mb-2 mr-2">
+              <p className="text-md text-white/60">Total distance:</p>
+              <p className="text-lg font-semibold">{route.totalDistance} meters</p>
+            </div>
+            <div className="border-secondary border-4 rounded-lg p-2 mb-2 mr-2">
+              <p className="text-md text-white/60">Total Elevation Gain:</p>
+              <p className="text-lg font-semibold">{route.totalClimb} meters</p>
+            </div>
+            <Button
+              text="Elev. graph"
+              containerStyles={`${graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 mr-2 w-32`}
+              textStyles="white"
+              handleClick={toggleGraphSeg}
+            />
+            <Button
+              text="Segments"
+              containerStyles={`${!graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 w-32`}
+              textStyles="white"
+              handleClick={toggleGraphSeg}
+            />
+            {graphSeg ?
+              <RouteGraph
+                allElevations={route.allElevations}
+                routePoints={route.points}
+                graphWidth={310}
+                graphHeight={200}
               />
-              <Button
-                text="Segments"
-                containerStyles={`${!graphSeg ? "bg-primary" : "bg-black border-2 border-primary"} mb-2 w-32`}
-                textStyles="white"
-                handleClick={toggleGraphSeg}
-              />
-              {graphSeg ?
-                <RouteGraph
-                  allElevations={route.allElevations}
-                  routePoints={route.points}
-                  graphWidth={310}
-                  graphHeight={200}
-                />
-                :
-                <SegmentDetails
-                  distance={route.distance}
-                  elevations={route.elevations} />
-              }
-            </ModalContainer>
-            :
-            <ModalContainer modalVisible={modalVisible} toggleModal={toggleModal} header="Your routes">
-              {!loading && allUserRoutes.length > 0 ? mapPosts : routePlaceholder}
-            </ModalContainer>
-          }
+              :
+              <SegmentDetails
+                distance={route.distance}
+                elevations={route.elevations} />
+            }
+          </ModalContainer>
         </div>
-        <div
-          className="flex flex-col 
-          rounded-lg 
-          text-white w-40 bg-black/95 
-          p-2 m-2 
-          absolute top-0 right-0 
-          h-fit">
-          <Button
-            text={`${savedMapView ? "Update" : "Save"} route`}
-            containerStyles="bg-primary"
-            textStyles="white"
-            handleClick={() => uploadRoute(route)}
-          />
-          {savedMapView ?
-            <>
-              <Button
-                text="Undo changes"
-                containerStyles="bg-primary mt-2"
-                textStyles="white"
-                handleClick={() => updateFullRoute(savedRoute)}
-              />
-              <Button
-                text="New route"
-                containerStyles="bg-primary mt-2"
-                textStyles="white"
-                handleClick={() => {
-                  updateFullRoute(emptyRoute);
-                  setSavedRoute(emptyRoute);
-                  setSavedMapView(false);
-                  setRouteId("");
-                }}
-              />
-            </>
-            :
-            null
-          }
-        </div>
+
       </div>
     </>
   )
